@@ -1,0 +1,29 @@
+{
+  "name": "rui",
+  "version": "1.0.0",
+  "description": "A Riot UI kit",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wellguimaraes/rui.git"
+  },
+  "keywords": [
+    "riot",
+    "components",
+    "ui",
+    "custom",
+    "tags"
+  ],
+  "author": "Wellington Guimaraes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wellguimaraes/rui/issues"
+  },
+  "homepage": "https://github.com/wellguimaraes/rui#readme",
+  "dependencies": {
+    "riot": "^2.3.13"
+  }
+}
