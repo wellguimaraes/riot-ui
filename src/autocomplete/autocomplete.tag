@@ -1,174 +1,142 @@
 <autocomplete>
-    <div>
-        <input type="text" name="_input" onkeydown="{handleArrowKeys}" onkeyup="{filterOptions}"
+    <div class="{focus: _input === document.activeElement}">
+        <input type="text"
+               name="_input"
+               onkeydown="{handleArrowKeys}"
+               onkeyup="{filterOptions}"
                onfocus="{showOptions}"
+               onblur="{hideOptions}"
                placeholder="{opts.placeholder}"/>
-        <ul name="_options" if="{shouldShowOptions && filteredCount}">
+        <ul name="_optionList" if="{shouldShowOptions && filteredCount}">
             <li each="{option, index in getFilteredOptions()}"
-                class="{selected: index == selected}"
+                class="{highlight: index == highlightIndex}"
                 onmouseover="{hoverOption}"
-                onclick="{selectCurrent}">{option.text}
+                onmousedown="{chooseCurrent}">{option.text}
             </li>
         </ul>
     </div>
-    <style scoped>
-        ul {
-            margin: 0;
-            padding: 0;
-            position: absolute;
-            background: white;
-            border: 1px solid #ccc;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 99;
-            border-top: 1px dotted #ccc;
-            margin-top: -1px;
-        }
+    <script type="text/ecmascript-6">
+        let keycode = rui.utils.keycode;
 
-        li {
-            margin: 0;
-            list-style: none;
-            padding: 5px 10px;
-        }
+        this.options = this.opts.options;
 
-        li:hover,
-        li.selected {
-            background: #999;
-            color: #fff;
-            cursor: default;
-        }
+        if (!Array.isArray(this.options))
+            this.options = Object.keys(this.options).map((key) => {
+                return {
+                    key: key,
+                    text: this.options[key]
+                };
+            });
+
+        this.shouldShowOptions = false;
+        this.highlightIndex = 0;
+        this.filteredCount = this.options.length;
+        this.filteredOptions = this.options;
 
 
-        input:focus,
-        input {
-            width: calc(100% - 12px);
-            margin: 0;
-            outline: none !important;
-            box-shadow: none !important;
-            padding: 5px !important;
-            border: 1px solid #ccc !important;
-        }
-    </style>
-    <script>
-        var tag = this;
-
-        tag.shouldShowOptions = false;
-        tag.selected = 0;
-        tag.filteredCount = tag.opts.options.length;
-        tag.filteredOptions = tag.opts.options;
-
-        tag.hoverOption = function (e) {
-            tag.selected = e.item.index;
+        this.hoverOption = (e) => {
+            this.highlightIndex = e.item.index;
         };
 
-
-        tag.showOptions = function () {
-            if (tag.shouldShowOptions == false) {
-                tag.shouldShowOptions = true;
-                tag.selected = 0;
-            }
+        this.hideOptions = () => {
+            this.shouldShowOptions = false;
         };
 
-        tag.filterOptions = function (e) {
-            tag.shouldShowOptions = true;
+        this.showOptions = () => {
+            if (this.shouldShowOptions == false)
+                this.highlightIndex = 0;
 
+            this.shouldShowOptions = true;
+        };
+
+        this.filterOptions = (e) => {
             switch (e.keyCode) {
-                case 27: // ESC
-                    tag.shouldShowOptions = false;
-                    return true;
+                case keycode.ESC:
+                case keycode.ENTER:
+                    this.hideOptions();
+                    break;
 
-                case 37: // LEFT
-                case 39: // RIGHT
-                case 46: // DELETE
-                case 8: // BACKSPACE
-                    return true;
+                case keycode.ARROW_LEFT:
+                case keycode.ARROW_RIGHT:
+                    break;
+
+                default:
+                    this.showOptions();
+                    break;
             }
-
-            if ([40, 38, 13].indexOf(e.keyCode) == -1)
-                tag.selected = 0;
 
             return true;
         };
 
-        tag.selectCurrent = function () {
-            tag._input.value = tag.filteredOptions[tag.selected].text;
-            tag._hideOptions();
-            tag.update();
+        this.chooseCurrent = () => {
+            this._input.value = this.filteredOptions[this.highlightIndex].text;
+            this.hideOptions();
+            this.update();
         };
 
-        tag.handleArrowKeys = function (e) {
+        this.handleArrowKeys = (e) => {
             switch (e.keyCode) {
-                case 40: // DOWN
-                    tag.selectNext(e);
-                    return true;
+                case keycode.ARROW_DOWN:
+                    this.highlightNext(e);
+                    return false;
 
-                case 38: // UP
-                    tag.selectPrevious(e);
-                    return true;
+                case keycode.ARROW_UP:
+                    this.highlightPrevious(e);
+                    return false;
 
-                case 13: // ENTER
-                    tag.selectCurrent();
+                case keycode.ENTER:
+                    this.chooseCurrent();
                     return true;
             }
 
             return true;
         };
 
-        tag.selectPrevious = function (e) {
+        this.highlightPrevious = (e) => {
             e.preventDefault();
-            tag.selected = Math.max(0, tag.selected-1);
+            this.highlightIndex = Math.max(0, this.highlightIndex - 1);
         };
 
-        tag.selectNext = function () {
-            tag.selected = Math.min(tag.selected+1, tag.filteredCount-1);
+        this.highlightNext = (e) => {
+            e.preventDefault();
+            this.highlightIndex = Math.min(this.highlightIndex + 1, this.filteredCount - 1);
         };
 
-        tag.on('updated', function () {
-            var optsHeight = 200;
-            var scrollTop = tag._options.scrollTop;
-            var selectedOption = tag._options.querySelector('.selected');
+        this.getFilteredOptions = () => {
+            let query = this._input.value.toLowerCase().trim();
+
+            this.filteredOptions = this.options.filter((opt) => {
+                let optionText = opt.text.toLowerCase();
+                let startsWithQuery = optionText.indexOf(query) == 0;
+                let hasWordStartingWithQuery = optionText.split(/\s/).some((t) => t.indexOf(query) == 0);
+
+                return startsWithQuery || hasWordStartingWithQuery;
+            });
+
+            this.filteredCount = this.filteredOptions.length;
+
+            return this.filteredOptions;
+        };
+
+        this.on('updated', () => {
+
+            // Scroll options
+
+            let optsHeight = this._optionList.offsetHeight;
+            let scrollTop = this._optionList.scrollTop;
+            let selectedOption = this._optionList.querySelector('.highlight');
 
             if (!selectedOption)
                 return;
 
-            var optOffset = selectedOption.offsetTop;
-            var optHeight = selectedOption.offsetHeight;
+            let optOffset = selectedOption.offsetTop;
+            let optHeight = selectedOption.offsetHeight;
 
-            if (optOffset + optHeight > scrollTop + optsHeight) {
-                tag._options.scrollTop += optOffset + optHeight - (scrollTop + optsHeight);
-            }
+            if (optOffset + optHeight > scrollTop + optsHeight)
+                this._optionList.scrollTop += optOffset + optHeight - (scrollTop + optsHeight);
 
-            if (optOffset <= scrollTop) {
-                tag._options.scrollTop = optOffset;
-            }
+            if (optOffset <= scrollTop)
+                this._optionList.scrollTop = optOffset;
         });
-
-        tag._hideOptions = function () {
-            tag.shouldShowOptions = false;
-            tag.selected = -1;
-        };
-
-        tag.getFilteredOptions = function () {
-            var inputValue = tag._input.value.toLowerCase().trim();
-
-            tag.filteredOptions = tag.opts.options.filter(function (item) {
-                return item.text.toLowerCase().indexOf(inputValue) == 0 ||
-                        item.text.toLowerCase().split(/\W/).some(function (t) {
-                            return t.indexOf(inputValue) == 0;
-                        });
-            });
-
-            tag.filteredCount = tag.filteredOptions.length;
-
-            if (tag.filteredOptions.length == 1 && inputValue == tag.filteredOptions[0].text.toLowerCase()) {
-                tag._hideOptions();
-            }
-
-            return tag.filteredOptions;
-        };
-
-        tag.on('mount', function () {
-            tag._options.style.width = $(tag._input).outerWidth() - 3 + "px";
-        })
     </script>
 </autocomplete>

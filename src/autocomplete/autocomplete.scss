@@ -1,0 +1,50 @@
+@import '../_common/default';
+
+autocomplete {
+  display: block;
+
+  &>div {
+    border-bottom: 2px solid #ddd;
+    padding: 5px;
+    position: relative;
+
+    &.focus {
+      border-color: $color-base-accent
+    }
+  }
+
+  ul {
+    margin: 7px 0 0 -5px;
+    padding: 0;
+    position: absolute;
+    background: white;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 99;
+    width: 100%;
+    box-shadow: 0 0 20px rgba(0,0,0,.2);
+  }
+
+  li {
+    margin: 0;
+    list-style: none;
+    padding: 5px 10px;
+    cursor: default;
+
+    &:hover,
+    &.highlight {
+      background: $color-base-dark;
+      color: #fff;
+    }
+  }
+
+  input:focus,
+  input {
+    width: 100%;
+    margin: 0;
+    border: 0;
+    outline: none;
+    box-shadow: none;
+    padding: 0;
+  }
+}
