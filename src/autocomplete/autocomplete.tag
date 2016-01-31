@@ -32,6 +32,7 @@
         this.highlightIndex = 0;
         this.filteredCount = this.options.length;
         this.filteredOptions = this.options;
+        this.selected = null;
 
 
         this.hoverOption = (e) => {
@@ -69,7 +70,15 @@
         };
 
         this.chooseCurrent = () => {
-            this._input.value = this.filteredOptions[this.highlightIndex].text;
+            let chosen = this.filteredOptions[this.highlightIndex];
+
+            this._input.value = chosen.text;
+
+            if (this.opts.onchange && this.selected != chosen)
+                this.opts.onchange(chosen);
+
+            this.selected = chosen;
+
             this.hideOptions();
             this.update();
         };

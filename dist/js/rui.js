@@ -32,6 +32,7 @@ riot.tag2('autocomplete', '<div class="{focus: _input === document.activeElement
     this.highlightIndex = 0;
     this.filteredCount = this.options.length;
     this.filteredOptions = this.options;
+    this.selected = null;
 
     this.hoverOption = function (e) {
         _this.highlightIndex = e.item.index;
@@ -67,7 +68,14 @@ riot.tag2('autocomplete', '<div class="{focus: _input === document.activeElement
     };
 
     this.chooseCurrent = function () {
-        _this._input.value = _this.filteredOptions[_this.highlightIndex].text;
+        var chosen = _this.filteredOptions[_this.highlightIndex];
+
+        _this._input.value = chosen.text;
+
+        if (_this.opts.onchange && _this.selected != chosen) _this.opts.onchange(chosen);
+
+        _this.selected = chosen;
+
         _this.hideOptions();
         _this.update();
     };
