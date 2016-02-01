@@ -76,6 +76,10 @@
         "WY": "Wyoming"
     };
 
+    options = Object.keys(options).map(function(s) {
+        return { key: s, text: options[s]};
+    });
+
     var teste = function(sel) {
         console.log(sel);
     };

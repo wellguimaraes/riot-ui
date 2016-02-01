@@ -18,20 +18,10 @@
     <script type="text/ecmascript-6">
         let keycode = rui.utils.keycode;
 
-        this.options = this.opts.options;
-
-        if (!Array.isArray(this.options))
-            this.options = Object.keys(this.options).map((key) => {
-                return {
-                    key: key,
-                    text: this.options[key]
-                };
-            });
-
         this.shouldShowOptions = false;
         this.highlightIndex = 0;
-        this.filteredCount = this.options.length;
-        this.filteredOptions = this.options;
+        this.filteredCount = this.opts.options.length;
+        this.filteredOptions = this.opts.options;
         this.selected = null;
 
 
@@ -127,7 +117,7 @@
         this.getFilteredOptions = () => {
             let query = this._input.value.toLowerCase().trim();
 
-            this.filteredOptions = this.options.filter((opt) => {
+            this.filteredOptions = this.opts.options.filter((opt) => {
                 let optionText = opt.text.toLowerCase();
                 let startsWithQuery = optionText.indexOf(query) == 0;
                 let hasWordStartingWithQuery = optionText.split(/\s/).some((t) => t.indexOf(query) == 0);

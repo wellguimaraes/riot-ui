@@ -14,25 +14,15 @@ var rui = {
         }
     }
 };
-riot.tag2('datepicker', '', '', '', function (opts) {});
 riot.tag2('autocomplete', '<div class="{focus: _input === document.activeElement}"> <input type="text" name="_input" onkeydown="{handleArrowKeys}" onkeyup="{filterOptions}" onfocus="{showOptions}" onblur="{hideOptions}" placeholder="{opts.placeholder}"> <ul name="_optionList" if="{shouldShowOptions && filteredCount}"> <li each="{option, index in getFilteredOptions()}" class="{highlight: index == highlightIndex}" onmouseover="{hoverOption}" onmousedown="{chooseCurrent}">{option.text} </li> </ul> </div>', '', '', function (opts) {
     var _this = this;
 
     var keycode = rui.utils.keycode;
 
-    this.options = this.opts.options;
-
-    if (!Array.isArray(this.options)) this.options = Object.keys(this.options).map(function (key) {
-        return {
-            key: key,
-            text: _this.options[key]
-        };
-    });
-
     this.shouldShowOptions = false;
     this.highlightIndex = 0;
-    this.filteredCount = this.options.length;
-    this.filteredOptions = this.options;
+    this.filteredCount = this.opts.options.length;
+    this.filteredOptions = this.opts.options;
     this.selected = null;
 
     this.hoverOption = function (e) {
@@ -125,7 +115,7 @@ riot.tag2('autocomplete', '<div class="{focus: _input === document.activeElement
     this.getFilteredOptions = function () {
         var query = _this._input.value.toLowerCase().trim();
 
-        _this.filteredOptions = _this.options.filter(function (opt) {
+        _this.filteredOptions = _this.opts.options.filter(function (opt) {
             var optionText = opt.text.toLowerCase();
             var startsWithQuery = optionText.indexOf(query) == 0;
             var hasWordStartingWithQuery = optionText.split(/\s/).some(function (t) {
@@ -156,3 +146,5 @@ riot.tag2('autocomplete', '<div class="{focus: _input === document.activeElement
         if (optOffset <= scrollTop) _this._optionList.scrollTop = optOffset;
     });
 }, '{ }');
+
+riot.tag2('datepicker', '', '', '', function (opts) {});
