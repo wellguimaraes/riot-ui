@@ -25,6 +25,12 @@ riot.tag2('autocomplete', '<div class="{focus: _input === document.activeElement
     this.filteredOptions = this.opts.options;
     this.selected = null;
 
+    this.reset = function () {
+        _this._input.value = '';
+        _this.selected = null;
+        _this.hideOptions();
+    };
+
     this.hoverOption = function (e) {
         _this.highlightIndex = e.item.index;
     };

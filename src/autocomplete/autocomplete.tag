@@ -25,6 +25,12 @@
         this.selected = null;
 
 
+        this.reset = () => {
+            this._input.value = '';
+            this.selected = null;
+            this.hideOptions();
+        };
+
         this.hoverOption = (e) => {
             this.highlightIndex = e.item.index;
         };
