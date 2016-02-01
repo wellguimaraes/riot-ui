@@ -14,6 +14,7 @@ var rui = {
         }
     }
 };
+riot.tag2('datepicker', '', '', '', function (opts) {});
 riot.tag2('autocomplete', '<div class="{focus: _input === document.activeElement}"> <input type="text" name="_input" onkeydown="{handleArrowKeys}" onkeyup="{filterOptions}" onfocus="{showOptions}" onblur="{hideOptions}" placeholder="{opts.placeholder}"> <ul name="_optionList" if="{shouldShowOptions && filteredCount}"> <li each="{option, index in getFilteredOptions()}" class="{highlight: index == highlightIndex}" onmouseover="{hoverOption}" onmousedown="{chooseCurrent}">{option.text} </li> </ul> </div>', '', '', function (opts) {
     var _this = this;
 
@@ -38,11 +39,18 @@ riot.tag2('autocomplete', '<div class="{focus: _input === document.activeElement
         _this.highlightIndex = e.item.index;
     };
 
+    this.toggleFocus = function () {
+        this.root.classList.toggle('focus', this._input === document.activeElement);
+    };
+
     this.hideOptions = function () {
+        _this.toggleFocus();
         _this.shouldShowOptions = false;
     };
 
     this.showOptions = function () {
+        _this.toggleFocus();
+
         if (_this.shouldShowOptions == false) _this.highlightIndex = 0;
 
         _this.shouldShowOptions = true;
@@ -59,7 +67,13 @@ riot.tag2('autocomplete', '<div class="{focus: _input === document.activeElement
             case keycode.ARROW_RIGHT:
                 break;
 
+            case keycode.ARROW_DOWN:
+            case keycode.ARROW_UP:
+                _this.showOptions();
+                break;
+
             default:
+                _this.highlightIndex = 0;
                 _this.showOptions();
                 break;
         }

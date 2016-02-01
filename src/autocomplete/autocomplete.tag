@@ -39,11 +39,18 @@
             this.highlightIndex = e.item.index;
         };
 
+        this.toggleFocus = function () {
+            this.root.classList.toggle('focus', this._input === document.activeElement);
+        };
+
         this.hideOptions = () => {
+            this.toggleFocus();
             this.shouldShowOptions = false;
         };
 
         this.showOptions = () => {
+            this.toggleFocus();
+
             if (this.shouldShowOptions == false)
                 this.highlightIndex = 0;
 
@@ -61,7 +68,13 @@
                 case keycode.ARROW_RIGHT:
                     break;
 
+                case keycode.ARROW_DOWN:
+                case keycode.ARROW_UP:
+                    this.showOptions();
+                    break;
+
                 default:
+                    this.highlightIndex = 0;
                     this.showOptions();
                     break;
             }
