@@ -1,5 +1,5 @@
-<autocomplete>
-    <div class="{focus: _input === document.activeElement}">
+<autocomplete class="{focus: document.hasFocus() && _input === document.activeElement}">
+    <div>
         <input type="text"
                name="_input"
                onkeydown="{handleArrowKeys}"
@@ -7,8 +7,8 @@
                onfocus="{showOptions}"
                onblur="{hideOptions}"
                placeholder="{opts.placeholder}"/>
-        <ul name="_optionList" if="{shouldShowOptions && filteredCount}">
-            <li each="{option, index in getFilteredOptions()}"
+        <ul name="_optionList" if="{shouldShowOptions && filteredCount()}">
+            <li each="{option, index in filtered}"
                 class="{highlight: index == highlightIndex}"
                 onmouseover="{hoverOption}"
                 onmousedown="{chooseCurrent}">{option.text}
@@ -20,10 +20,11 @@
 
         this.shouldShowOptions = false;
         this.highlightIndex = 0;
-        this.filteredCount = this.opts.options.length;
-        this.filteredOptions = this.opts.options;
+        this.filtered = this.opts.options;
         this.selected = null;
 
+        this.filteredCount = () => this.filtered.length;
+        this.hoverOption = (e) => this.highlightIndex = e.item.index;
 
         this.reset = () => {
             this._input.value = '';
@@ -31,22 +32,11 @@
             this.hideOptions();
         };
 
-        this.hoverOption = (e) => {
-            this.highlightIndex = e.item.index;
-        };
-
-        this.toggleFocus = function () {
-            this.root.classList.toggle('focus', this._input === document.activeElement);
-        };
-
         this.hideOptions = () => {
-            this.toggleFocus();
             this.shouldShowOptions = false;
         };
 
         this.showOptions = () => {
-            this.toggleFocus();
-
             if (this.shouldShowOptions == false)
                 this.highlightIndex = 0;
 
@@ -70,6 +60,8 @@
                     break;
 
                 default:
+                    let queryRegex = new RegExp(`(^|\\s)${this._input.value.trim()}`, 'i');
+                    this.filtered = this.opts.options.filter((opt) => queryRegex.test(opt.text));
                     this.highlightIndex = 0;
                     this.showOptions();
                     break;
@@ -79,7 +71,7 @@
         };
 
         this.chooseCurrent = () => {
-            let chosen = this.filteredOptions[this.highlightIndex];
+            let chosen = this.filtered[this.highlightIndex];
 
             this._input.value = chosen.text;
 
@@ -95,11 +87,13 @@
         this.handleArrowKeys = (e) => {
             switch (e.keyCode) {
                 case keycode.ARROW_DOWN:
-                    this.highlightNext(e);
+                    e.preventDefault();
+                    this.highlightIndex = Math.min(this.highlightIndex + 1, this.filteredCount() - 1);
                     return false;
 
                 case keycode.ARROW_UP:
-                    this.highlightPrevious(e);
+                    e.preventDefault();
+                    this.highlightIndex = Math.max(0, this.highlightIndex - 1);
                     return false;
 
                 case keycode.ENTER:
@@ -110,48 +104,23 @@
             return true;
         };
 
-        this.highlightPrevious = (e) => {
-            e.preventDefault();
-            this.highlightIndex = Math.max(0, this.highlightIndex - 1);
-        };
-
-        this.highlightNext = (e) => {
-            e.preventDefault();
-            this.highlightIndex = Math.min(this.highlightIndex + 1, this.filteredCount - 1);
-        };
-
-        this.getFilteredOptions = () => {
-            let query = this._input.value.toLowerCase().trim();
-
-            this.filteredOptions = this.opts.options.filter((opt) => {
-                let optionText = opt.text.toLowerCase();
-                let startsWithQuery = optionText.indexOf(query) == 0;
-                let hasWordStartingWithQuery = optionText.split(/\s/).some((t) => t.indexOf(query) == 0);
-
-                return startsWithQuery || hasWordStartingWithQuery;
-            });
-
-            this.filteredCount = this.filteredOptions.length;
-
-            return this.filteredOptions;
-        };
 
         this.on('updated', () => {
 
             // Scroll options
 
-            let optsHeight = this._optionList.offsetHeight;
-            let scrollTop = this._optionList.scrollTop;
             let selectedOption = this._optionList.querySelector('.highlight');
 
             if (!selectedOption)
                 return;
 
+            let optsHeight = this._optionList.offsetHeight;
+            let scrollTop = this._optionList.scrollTop;
             let optOffset = selectedOption.offsetTop;
             let optHeight = selectedOption.offsetHeight;
 
             if (optOffset + optHeight > scrollTop + optsHeight)
-                this._optionList.scrollTop += optOffset + optHeight - (scrollTop + optsHeight);
+                this._optionList.scrollTop += optOffset + optHeight - scrollTop - optsHeight;
 
             if (optOffset <= scrollTop)
                 this._optionList.scrollTop = optOffset;

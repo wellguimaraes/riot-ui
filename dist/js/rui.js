@@ -14,16 +14,22 @@ var rui = {
         }
     }
 };
-riot.tag2('autocomplete', '<div class="{focus: _input === document.activeElement}"> <input type="text" name="_input" onkeydown="{handleArrowKeys}" onkeyup="{filterOptions}" onfocus="{showOptions}" onblur="{hideOptions}" placeholder="{opts.placeholder}"> <ul name="_optionList" if="{shouldShowOptions && filteredCount}"> <li each="{option, index in getFilteredOptions()}" class="{highlight: index == highlightIndex}" onmouseover="{hoverOption}" onmousedown="{chooseCurrent}">{option.text} </li> </ul> </div>', '', '', function (opts) {
+riot.tag2('autocomplete', '<div> <input type="text" name="_input" onkeydown="{handleArrowKeys}" onkeyup="{filterOptions}" onfocus="{showOptions}" onblur="{hideOptions}" placeholder="{opts.placeholder}"> <ul name="_optionList" if="{shouldShowOptions && filteredCount()}"> <li each="{option, index in filtered}" class="{highlight: index == highlightIndex}" onmouseover="{hoverOption}" onmousedown="{chooseCurrent}">{option.text} </li> </ul> </div>', '', 'class="{focus: document.hasFocus() && _input === document.activeElement}"', function (opts) {
     var _this = this;
 
     var keycode = rui.utils.keycode;
 
     this.shouldShowOptions = false;
     this.highlightIndex = 0;
-    this.filteredCount = this.opts.options.length;
-    this.filteredOptions = this.opts.options;
+    this.filtered = this.opts.options;
     this.selected = null;
+
+    this.filteredCount = function () {
+        return _this.filtered.length;
+    };
+    this.hoverOption = function (e) {
+        return _this.highlightIndex = e.item.index;
+    };
 
     this.reset = function () {
         _this._input.value = '';
@@ -31,22 +37,11 @@ riot.tag2('autocomplete', '<div class="{focus: _input === document.activeElement
         _this.hideOptions();
     };
 
-    this.hoverOption = function (e) {
-        _this.highlightIndex = e.item.index;
-    };
-
-    this.toggleFocus = function () {
-        this.root.classList.toggle('focus', this._input === document.activeElement);
-    };
-
     this.hideOptions = function () {
-        _this.toggleFocus();
         _this.shouldShowOptions = false;
     };
 
     this.showOptions = function () {
-        _this.toggleFocus();
-
         if (_this.shouldShowOptions == false) _this.highlightIndex = 0;
 
         _this.shouldShowOptions = true;
@@ -69,6 +64,10 @@ riot.tag2('autocomplete', '<div class="{focus: _input === document.activeElement
                 break;
 
             default:
+                var queryRegex = new RegExp('(^|\\s)' + _this._input.value.trim(), 'i');
+                _this.filtered = _this.opts.options.filter(function (opt) {
+                    return queryRegex.test(opt.text);
+                });
                 _this.highlightIndex = 0;
                 _this.showOptions();
                 break;
@@ -78,7 +77,7 @@ riot.tag2('autocomplete', '<div class="{focus: _input === document.activeElement
     };
 
     this.chooseCurrent = function () {
-        var chosen = _this.filteredOptions[_this.highlightIndex];
+        var chosen = _this.filtered[_this.highlightIndex];
 
         _this._input.value = chosen.text;
 
@@ -93,11 +92,13 @@ riot.tag2('autocomplete', '<div class="{focus: _input === document.activeElement
     this.handleArrowKeys = function (e) {
         switch (e.keyCode) {
             case keycode.ARROW_DOWN:
-                _this.highlightNext(e);
+                e.preventDefault();
+                _this.highlightIndex = Math.min(_this.highlightIndex + 1, _this.filteredCount() - 1);
                 return false;
 
             case keycode.ARROW_UP:
-                _this.highlightPrevious(e);
+                e.preventDefault();
+                _this.highlightIndex = Math.max(0, _this.highlightIndex - 1);
                 return false;
 
             case keycode.ENTER:
@@ -108,46 +109,18 @@ riot.tag2('autocomplete', '<div class="{focus: _input === document.activeElement
         return true;
     };
 
-    this.highlightPrevious = function (e) {
-        e.preventDefault();
-        _this.highlightIndex = Math.max(0, _this.highlightIndex - 1);
-    };
-
-    this.highlightNext = function (e) {
-        e.preventDefault();
-        _this.highlightIndex = Math.min(_this.highlightIndex + 1, _this.filteredCount - 1);
-    };
-
-    this.getFilteredOptions = function () {
-        var query = _this._input.value.toLowerCase().trim();
-
-        _this.filteredOptions = _this.opts.options.filter(function (opt) {
-            var optionText = opt.text.toLowerCase();
-            var startsWithQuery = optionText.indexOf(query) == 0;
-            var hasWordStartingWithQuery = optionText.split(/\s/).some(function (t) {
-                return t.indexOf(query) == 0;
-            });
-
-            return startsWithQuery || hasWordStartingWithQuery;
-        });
-
-        _this.filteredCount = _this.filteredOptions.length;
-
-        return _this.filteredOptions;
-    };
-
     this.on('updated', function () {
 
-        var optsHeight = _this._optionList.offsetHeight;
-        var scrollTop = _this._optionList.scrollTop;
         var selectedOption = _this._optionList.querySelector('.highlight');
 
         if (!selectedOption) return;
 
+        var optsHeight = _this._optionList.offsetHeight;
+        var scrollTop = _this._optionList.scrollTop;
         var optOffset = selectedOption.offsetTop;
         var optHeight = selectedOption.offsetHeight;
 
-        if (optOffset + optHeight > scrollTop + optsHeight) _this._optionList.scrollTop += optOffset + optHeight - (scrollTop + optsHeight);
+        if (optOffset + optHeight > scrollTop + optsHeight) _this._optionList.scrollTop += optOffset + optHeight - scrollTop - optsHeight;
 
         if (optOffset <= scrollTop) _this._optionList.scrollTop = optOffset;
     });
