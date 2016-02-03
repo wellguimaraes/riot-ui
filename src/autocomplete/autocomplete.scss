@@ -13,9 +13,10 @@
 }
 
 autocomplete {
+  @extend .component;
+  @extend .component-border;
   display: block;
-  border-bottom: 2px solid #ddd;
-  padding: 5px;
+  padding: 7px 10px;
   position: relative;
 
   &.focus {
@@ -23,15 +24,17 @@ autocomplete {
   }
 
   ul {
-    margin: 7px 0 0 -5px;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    margin: 0;
+    top: calc(100% + 5px);
+    left: -1px;
     padding: 0;
     position: absolute;
     background: white;
     max-height: 200px;
-    overflow-y: auto;
+    overflow-y: hidden;
     z-index: 99;
     width: 100%;
-    box-shadow: 0 0 20px rgba(0, 0, 0, .2);
   }
 
   li {
