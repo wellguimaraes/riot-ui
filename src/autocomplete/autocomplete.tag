@@ -2,29 +2,30 @@
     <div>
         <input type="text"
                name="_input"
+               class="input"
                onkeydown="{handleArrowKeys}"
                onkeyup="{filterOptions}"
                onfocus="{showOptions}"
                onblur="{hideOptions}"
                placeholder="{opts.placeholder}"/>
-        <ul name="_optionList" if="{shouldShowOptions && filteredCount()}">
-            <li each="{option, index in filtered}"
-                class="{highlight: index == highlightIndex}"
-                onmouseover="{hoverOption}"
-                onmousedown="{chooseCurrent}">{option.text}
-            </li>
-        </ul>
+        <nav class="menu is-small" name="_optionList" if="{shouldShowOptions && filteredCount()}">
+            <a class="menu-block is-small {active: index == active}"
+               each="{option, index in filtered}"
+               onmouseover="{hoverOption}"
+               onmousedown="{chooseCurrent}">{option.text}
+            </a>
+        </nav>
     </div>
     <script type="text/ecmascript-6">
         let keycode = rui.utils.keycode;
 
-        this.shouldShowOptions = false;
-        this.highlightIndex = 0;
+        this.active = 0;
         this.filtered = this.opts.options;
-        this.selected = null;
-
         this.filteredCount = () => this.filtered.length;
-        this.hoverOption = (e) => this.highlightIndex = e.item.index;
+
+        this.hoverOption = (e) => {
+            !this.hoverLocked && (this.active = e.item.index);
+        };
 
         this.reset = () => {
             this._input.value = '';
@@ -37,21 +38,21 @@
         };
 
         this.showOptions = () => {
-            if (this.shouldShowOptions == false)
-                this.highlightIndex = 0;
+            if (!this.shouldShowOptions)
+                this.active = 0;
 
             this.shouldShowOptions = true;
         };
 
         this.filterOptions = (e) => {
             switch (e.keyCode) {
+                case keycode.ARROW_LEFT:
+                case keycode.ARROW_RIGHT:
+                    break;
+
                 case keycode.ESC:
                 case keycode.ENTER:
                     this.hideOptions();
-                    break;
-
-                case keycode.ARROW_LEFT:
-                case keycode.ARROW_RIGHT:
                     break;
 
                 case keycode.ARROW_DOWN:
@@ -62,7 +63,7 @@
                 default:
                     let queryRegex = new RegExp(`(^|\\s)${this._input.value.trim()}`, 'i');
                     this.filtered = this.opts.options.filter((opt) => queryRegex.test(opt.text));
-                    this.highlightIndex = 0;
+                    this.active = 0;
                     this.showOptions();
                     break;
             }
@@ -71,7 +72,7 @@
         };
 
         this.chooseCurrent = () => {
-            let chosen = this.filtered[this.highlightIndex];
+            let chosen = this.filtered[this.active];
 
             this._input.value = chosen.text;
 
@@ -87,13 +88,15 @@
         this.handleArrowKeys = (e) => {
             switch (e.keyCode) {
                 case keycode.ARROW_DOWN:
+                    this.lockHover();
                     e.preventDefault();
-                    this.highlightIndex = Math.min(this.highlightIndex + 1, this.filteredCount() - 1);
+                    this.active = Math.min(this.active + 1, this.filteredCount() - 1);
                     return false;
 
                 case keycode.ARROW_UP:
+                    this.lockHover();
                     e.preventDefault();
-                    this.highlightIndex = Math.max(0, this.highlightIndex - 1);
+                    this.active = Math.max(0, this.active - 1);
                     return false;
 
                 case keycode.ENTER:
@@ -104,26 +107,38 @@
             return true;
         };
 
+        this.lockHover = function () {
+            let _unlockHover = () => {
+                this.hoverLocked = false;
+                window.removeEventListener('mousemove', _unlockHover);
+            };
+
+            window.addEventListener('mousemove', _unlockHover);
+            this.hoverLocked = true;
+        };
+
 
         this.on('updated', () => {
-
             // Scroll options
-
-            let selectedOption = this._optionList.querySelector('.highlight');
+            let selectedOption = this._optionList.querySelector('.active');
 
             if (!selectedOption)
                 return;
 
             let optsHeight = this._optionList.offsetHeight;
-            let scrollTop = this._optionList.scrollTop;
-            let optOffset = selectedOption.offsetTop;
-            let optHeight = selectedOption.offsetHeight;
+            let scrollTop  = this._optionList.scrollTop;
+            let selOffset  = selectedOption.offsetTop;
+            let selHeight  = selectedOption.offsetHeight;
 
-            if (optOffset + optHeight > scrollTop + optsHeight)
-                this._optionList.scrollTop += optOffset + optHeight - scrollTop - optsHeight;
+            if (selOffset + selHeight > scrollTop + optsHeight)
+                this._optionList.scrollTop +=
+                          selOffset
+                        + selHeight
+                        - scrollTop
+                        - optsHeight;
 
-            if (optOffset <= scrollTop)
-                this._optionList.scrollTop = optOffset;
+            if (selOffset <= scrollTop)
+                this._optionList.scrollTop = selOffset;
         });
     </script>
 </autocomplete>

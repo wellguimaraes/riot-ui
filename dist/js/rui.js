@@ -14,21 +14,19 @@ var rui = {
         }
     }
 };
-riot.tag2('autocomplete', '<div> <input type="text" name="_input" onkeydown="{handleArrowKeys}" onkeyup="{filterOptions}" onfocus="{showOptions}" onblur="{hideOptions}" placeholder="{opts.placeholder}"> <ul name="_optionList" if="{shouldShowOptions && filteredCount()}"> <li each="{option, index in filtered}" class="{highlight: index == highlightIndex}" onmouseover="{hoverOption}" onmousedown="{chooseCurrent}">{option.text} </li> </ul> </div>', '', 'class="{focus: document.hasFocus() && _input === document.activeElement}"', function (opts) {
+riot.tag2('autocomplete', '<div> <input type="text" name="_input" class="input" onkeydown="{handleArrowKeys}" onkeyup="{filterOptions}" onfocus="{showOptions}" onblur="{hideOptions}" placeholder="{opts.placeholder}"> <nav class="menu is-small" name="_optionList" if="{shouldShowOptions && filteredCount()}"> <a class="menu-block is-small {active: index == active}" each="{option, index in filtered}" onmouseover="{hoverOption}" onmousedown="{chooseCurrent}">{option.text} </a> </nav> </div>', '', 'class="{focus: document.hasFocus() && _input === document.activeElement}"', function (opts) {
     var _this = this;
 
     var keycode = rui.utils.keycode;
 
-    this.shouldShowOptions = false;
-    this.highlightIndex = 0;
+    this.active = 0;
     this.filtered = this.opts.options;
-    this.selected = null;
-
     this.filteredCount = function () {
         return _this.filtered.length;
     };
+
     this.hoverOption = function (e) {
-        return _this.highlightIndex = e.item.index;
+        !_this.hoverLocked && (_this.active = e.item.index);
     };
 
     this.reset = function () {
@@ -42,20 +40,20 @@ riot.tag2('autocomplete', '<div> <input type="text" name="_input" onkeydown="{ha
     };
 
     this.showOptions = function () {
-        if (_this.shouldShowOptions == false) _this.highlightIndex = 0;
+        if (!_this.shouldShowOptions) _this.active = 0;
 
         _this.shouldShowOptions = true;
     };
 
     this.filterOptions = function (e) {
         switch (e.keyCode) {
+            case keycode.ARROW_LEFT:
+            case keycode.ARROW_RIGHT:
+                break;
+
             case keycode.ESC:
             case keycode.ENTER:
                 _this.hideOptions();
-                break;
-
-            case keycode.ARROW_LEFT:
-            case keycode.ARROW_RIGHT:
                 break;
 
             case keycode.ARROW_DOWN:
@@ -68,7 +66,7 @@ riot.tag2('autocomplete', '<div> <input type="text" name="_input" onkeydown="{ha
                 _this.filtered = _this.opts.options.filter(function (opt) {
                     return queryRegex.test(opt.text);
                 });
-                _this.highlightIndex = 0;
+                _this.active = 0;
                 _this.showOptions();
                 break;
         }
@@ -77,7 +75,7 @@ riot.tag2('autocomplete', '<div> <input type="text" name="_input" onkeydown="{ha
     };
 
     this.chooseCurrent = function () {
-        var chosen = _this.filtered[_this.highlightIndex];
+        var chosen = _this.filtered[_this.active];
 
         _this._input.value = chosen.text;
 
@@ -92,13 +90,15 @@ riot.tag2('autocomplete', '<div> <input type="text" name="_input" onkeydown="{ha
     this.handleArrowKeys = function (e) {
         switch (e.keyCode) {
             case keycode.ARROW_DOWN:
+                _this.lockHover();
                 e.preventDefault();
-                _this.highlightIndex = Math.min(_this.highlightIndex + 1, _this.filteredCount() - 1);
+                _this.active = Math.min(_this.active + 1, _this.filteredCount() - 1);
                 return false;
 
             case keycode.ARROW_UP:
+                _this.lockHover();
                 e.preventDefault();
-                _this.highlightIndex = Math.max(0, _this.highlightIndex - 1);
+                _this.active = Math.max(0, _this.active - 1);
                 return false;
 
             case keycode.ENTER:
@@ -109,20 +109,32 @@ riot.tag2('autocomplete', '<div> <input type="text" name="_input" onkeydown="{ha
         return true;
     };
 
+    this.lockHover = function () {
+        var _this2 = this;
+
+        var _unlockHover = function _unlockHover() {
+            _this2.hoverLocked = false;
+            window.removeEventListener('mousemove', _unlockHover);
+        };
+
+        window.addEventListener('mousemove', _unlockHover);
+        this.hoverLocked = true;
+    };
+
     this.on('updated', function () {
 
-        var selectedOption = _this._optionList.querySelector('.highlight');
+        var selectedOption = _this._optionList.querySelector('.active');
 
         if (!selectedOption) return;
 
         var optsHeight = _this._optionList.offsetHeight;
         var scrollTop = _this._optionList.scrollTop;
-        var optOffset = selectedOption.offsetTop;
-        var optHeight = selectedOption.offsetHeight;
+        var selOffset = selectedOption.offsetTop;
+        var selHeight = selectedOption.offsetHeight;
 
-        if (optOffset + optHeight > scrollTop + optsHeight) _this._optionList.scrollTop += optOffset + optHeight - scrollTop - optsHeight;
+        if (selOffset + selHeight > scrollTop + optsHeight) _this._optionList.scrollTop += selOffset + selHeight - scrollTop - optsHeight;
 
-        if (optOffset <= scrollTop) _this._optionList.scrollTop = optOffset;
+        if (selOffset <= scrollTop) _this._optionList.scrollTop = selOffset;
     });
 }, '{ }');
 

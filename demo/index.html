@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Riot UI Demo</title>
+    <style>
+        html {
+            padding: 20px !important;
+            background-color: #fff !important;
+        }
+    </style>
     <link href="../dist/css/rui.css" type="text/css" rel="stylesheet">
 </head>
 <body>
 
 <div>
     <h4>Autocomplete</h4>
-    <autocomplete options="{options}" placeholder="Select a US state" style="width: 300px" onchange="{teste}"></autocomplete>
+    <autocomplete options="{options}" placeholder="Select a US state" style="width: 300px"
+                  onchange="{teste}"></autocomplete>
 </div>
 <script src="https://cdn.jsdelivr.net/riot/2.3/riot.min.js" type="text/javascript"></script>
 <script src="../dist/js/rui.js" type="text/javascript"></script>
@@ -76,11 +83,11 @@
         "WY": "Wyoming"
     };
 
-    options = Object.keys(options).map(function(s) {
-        return { key: s, text: options[s]};
+    options = Object.keys(options).map(function (s) {
+        return {key: s, text: options[s]};
     });
 
-    var teste = function(sel) {
+    var teste = function (sel) {
         console.log(sel);
     };
 

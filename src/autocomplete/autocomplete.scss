@@ -1,64 +1,27 @@
 @import '../_common/default';
 
-@keyframes highlight {
-  from {
-    background: $color-base-accent;
-    color: white;
-  }
-
-  to {
-    background: $color-base-dark;
-    color: white
-  }
-}
-
 autocomplete {
-  @extend .component;
-  @extend .component-border;
   display: block;
-  padding: 7px 10px;
   position: relative;
 
-  &.focus {
-    border-color: $color-base-accent
-  }
-
-  ul {
-    box-shadow: 0 0 10px rgba(0,0,0,.2);
-    margin: 0;
-    top: calc(100% + 5px);
-    left: -1px;
-    padding: 0;
+  nav.menu {
     position: absolute;
-    background: white;
+    left: 0;
+    top: calc(100% + 5px);
+    margin: 0;
+    padding: 0;
+    background-color: white;
     max-height: 200px;
+    width: 100%;
     overflow-y: hidden;
     z-index: 99;
-    width: 100%;
   }
 
-  li {
-    margin: 0;
-    list-style: none;
-    padding: 5px 10px;
-    cursor: default;
-
-    &:hover,
-    &.highlight {
-      animation: highlight 300ms;
-      animation-fill-mode: forwards;
-      background: $color-base-dark;
-      color: white;
-    }
+  .menu-block:hover {
+    background-color: transparent;
   }
 
-  input:focus,
-  input {
-    width: 100%;
-    margin: 0;
-    border: 0;
-    outline: none;
-    box-shadow: none;
-    padding: 0;
+  .menu-block.active {
+    background-color: $grey-lighter !important;
   }
 }
