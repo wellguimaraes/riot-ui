@@ -1,2 +1,2 @@
 # rui
-Riot UI kit
+[Bulma](http://bulma.io)-like Components for [Riot.js](http://riotjs.com)
