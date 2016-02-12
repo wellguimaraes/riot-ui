@@ -9,6 +9,7 @@ var rename = require('gulp-rename');
 var replace = require('gulp-replace');
 var babel = require('gulp-babel');
 var filter = require('gulp-filter');
+var browserSync = require('browser-sync').create();
 
 var paths = {
     util: 'src/_common/util.js',
@@ -19,6 +20,14 @@ var paths = {
         css: './dist/css/'
     }
 };
+
+gulp.task('browser-sync', () => {
+    browserSync.init({
+        server: {
+            baseDir: "./"
+        }
+    });
+});
 
 gulp.task('tags', () => {
     const tagFilter = filter('**/*.tag', {restore: true});
@@ -42,11 +51,12 @@ gulp.task('scss', () =>
         .pipe(cssnano())
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(paths.dest.css))
+        .pipe(browserSync.stream())
 );
 
 gulp.task('watch', () => {
-    gulp.watch(paths.tags, ['tags']);
+    gulp.watch(paths.tags, ['tags']).on('change', browserSync.reload);
     gulp.watch(paths.scss, ['scss']);
 });
 
-gulp.task('default', ['tags','scss', 'watch']);
+gulp.task('default', ['browser-sync', 'tags','scss', 'watch']);

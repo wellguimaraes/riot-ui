@@ -15,6 +15,8 @@ autocomplete {
     width: 100%;
     overflow-y: hidden;
     z-index: 99;
+
+    border-color: $blue;
   }
 
   .menu-block:hover {
