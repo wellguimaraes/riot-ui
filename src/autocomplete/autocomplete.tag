@@ -52,7 +52,10 @@
         let keycode = rui.utils.keycode;
 
         this.active = 0;
-        this.filtered = this.opts.options;
+        this.filtered = this.opts.options.filter((opt) => {
+            return !this.opts.filter || this.opts.filter(opt);
+        });
+
         this.filteredCount = () => this.filtered.length;
 
         this.hoverOption = (e) => {
@@ -99,7 +102,7 @@
             let queryRegex = new RegExp(`(^|\\s)${this._input.value.trim()}`, 'i');
 
             this.filtered = this.opts.options.filter((opt) =>
-                queryRegex.test(opt.text) && (!opts.filter || opts.filter(opt))
+                queryRegex.test(opt.text) && (!this.opts.filter || this.opts.filter(opt))
             );
 
             this.active = 0;
