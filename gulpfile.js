@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var riot = require('gulp-riot');
 var minify = require('gulp-minify');
-var cssnano = require('gulp-cssnano');
 var concat = require('gulp-concat');
 var sass = require('gulp-sass');
 var sourcemaps = require('gulp-sourcemaps');
@@ -14,11 +13,7 @@ var browserSync = require('browser-sync').create();
 var paths = {
     util: 'src/_common/util.js',
     tags: 'src/**/*.tag',
-    scss: 'src/**/*.scss',
-    dest: {
-        js: './dist/js/',
-        css: './dist/css/'
-    }
+    dest: './dist/'
 };
 
 gulp.task('browser-sync', () => {
@@ -33,30 +28,26 @@ gulp.task('tags', () => {
     const tagFilter = filter('**/*.tag', {restore: true});
 
     gulp.src([paths.util, paths.tags])
+
+        // Replace script type
         .pipe(tagFilter)
         .pipe(replace(/type="text\/ecmascript-6"/g, ''))
         .pipe(riot())
         .pipe(tagFilter.restore)
+
+        // Concat in Rui
         .pipe(concat('rui.js'))
         .pipe(babel({presets: ['es2015']}))
         .pipe(minify())
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest(paths.dest.js));
+
+        .pipe(sourcemaps.write('./'))
+
+        .pipe(gulp.dest(paths.dest));
 });
 
-gulp.task('scss', () =>
-    gulp.src(paths.scss)
-        .pipe(sass())
-        .pipe(concat('rui.css'))
-        .pipe(cssnano())
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest(paths.dest.css))
-        .pipe(browserSync.stream())
-);
 
 gulp.task('watch', () => {
     gulp.watch(paths.tags, ['tags']).on('change', browserSync.reload);
-    gulp.watch(paths.scss, ['scss']);
 });
 
-gulp.task('default', ['browser-sync', 'tags','scss', 'watch']);
+gulp.task('default', ['browser-sync', 'tags', 'watch']);

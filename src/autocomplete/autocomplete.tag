@@ -8,16 +8,47 @@
                onfocus="{showOptions}"
                onblur="{hideOptions}"
                placeholder="{opts.placeholder}"/>
-        <nav class="menu is-small" name="_optionList" if="{shouldShowOptions && filteredCount()}">
-            <a class="menu-block is-small {active: index == active}"
+        <ul class="menu is-small" name="_optionList" if="{shouldShowOptions && filteredCount()}">
+            <li class="menu-block is-small {active: index == active}"
                each="{option, index in filtered}"
                onmouseover="{hoverOption}"
                onmousedown="{chooseCurrent}">{option.text}
-            </a>
-        </nav>
+            </li>
+        </ul>
     </div>
+    <style scoped>
+        :scope {
+            display: block;
+            position: relative;
+        }
+
+        nav.menu {
+            position: absolute;
+            left: 0;
+            top: calc(100% + 5px);
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            max-height: 200px;
+            width: 100%;
+            overflow-y: hidden;
+            z-index: 99;
+            border-color: #08e;
+        }
+
+        .menu-block:hover {
+            background-color: transparent;
+        }
+
+        .menu-block.active {
+            background-color: #ddd !important;
+        }
+
+    </style>
     <script type="text/ecmascript-6">
         let keycode = rui.utils.keycode;
+
+        this.style = require('./autocomplete.scss');
 
         this.active = 0;
         this.filtered = this.opts.options;
