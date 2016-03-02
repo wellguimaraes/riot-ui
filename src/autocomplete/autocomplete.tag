@@ -62,6 +62,7 @@
         this.reset = () => {
             this._input.value = '';
             this.selected = null;
+            this.filterOptions();
             this.hideOptions();
         };
 
@@ -77,28 +78,28 @@
         };
 
         this.filterOptions = (e) => {
-            switch (e.keyCode) {
+            var keyCode = e ? e.keyCode : -1 || -1;
+
+            switch (keyCode) {
                 case keycode.ARROW_LEFT:
                 case keycode.ARROW_RIGHT:
-                    break;
+                    return true;
 
                 case keycode.ESC:
                 case keycode.ENTER:
                     this.hideOptions();
-                    break;
+                    return true;
 
                 case keycode.ARROW_DOWN:
                 case keycode.ARROW_UP:
                     this.showOptions();
-                    break;
-
-                default:
-                    let queryRegex = new RegExp(`(^|\\s)${this._input.value.trim()}`, 'i');
-                    this.filtered = this.opts.options.filter((opt) => queryRegex.test(opt.text));
-                    this.active = 0;
-                    this.showOptions();
-                    break;
+                    return true;
             }
+
+            let queryRegex = new RegExp(`(^|\\s)${this._input.value.trim()}`, 'i');
+            this.filtered = this.opts.options.filter((opt) => queryRegex.test(opt.text));
+            this.active = 0;
+            this.showOptions();
 
             return true;
         };
@@ -172,5 +173,10 @@
             if (selOffset <= scrollTop)
                 this._optionList.scrollTop = selOffset;
         });
+
+        setTimeout(() => {
+            this.reset();
+            console.log('reset')
+        }, 5000)
     </script>
 </autocomplete>
