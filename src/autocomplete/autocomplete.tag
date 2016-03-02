@@ -48,8 +48,6 @@
     <script type="text/ecmascript-6">
         let keycode = rui.utils.keycode;
 
-        this.style = require('./autocomplete.scss');
-
         this.active = 0;
         this.filtered = this.opts.options;
         this.filteredCount = () => this.filtered.length;
