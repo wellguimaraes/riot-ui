@@ -97,7 +97,11 @@
             }
 
             let queryRegex = new RegExp(`(^|\\s)${this._input.value.trim()}`, 'i');
-            this.filtered = this.opts.options.filter((opt) => queryRegex.test(opt.text));
+
+            this.filtered = this.opts.options.filter((opt) =>
+                queryRegex.test(opt.text) && (!opts.filter || opts.filter(opt))
+            );
+
             this.active = 0;
             this.showOptions();
 
@@ -173,10 +177,5 @@
             if (selOffset <= scrollTop)
                 this._optionList.scrollTop = selOffset;
         });
-
-        setTimeout(() => {
-            this.reset();
-            console.log('reset')
-        }, 5000)
     </script>
 </autocomplete>
