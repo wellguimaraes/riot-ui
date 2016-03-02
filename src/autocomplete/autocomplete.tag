@@ -1,21 +1,20 @@
 <autocomplete class="{focus: document.hasFocus() && _input === document.activeElement}">
-    <div>
-        <input type="text"
-               name="_input"
-               class="input"
-               onkeydown="{handleArrowKeys}"
-               onkeyup="{filterOptions}"
-               onfocus="{showOptions}"
-               onblur="{hideOptions}"
-               placeholder="{opts.placeholder}"/>
-        <ul class="menu" name="_optionList" if="{shouldShowOptions && filteredCount()}">
-            <li class="menu-block {active: index == active}"
-               each="{option, index in filtered}"
-               onmouseover="{hoverOption}"
-               onmousedown="{chooseCurrent}">{option.text}
-            </li>
-        </ul>
-    </div>
+    <input type="text"
+           name="_input"
+           class="input"
+           onkeydown="{handleArrowKeys}"
+           onkeyup="{filterOptions}"
+           onfocus="{showOptions}"
+           onblur="{hideOptions}"
+           placeholder="{opts.placeholder}"/>
+    <ul class="menu" name="_optionList" if="{shouldShowOptions && filteredCount()}">
+        <li class="menu-block {active: index == active}"
+            each="{option, index in filtered}"
+            onmouseover="{hoverOption}"
+            onmousedown="{chooseCurrent}">{option.text}
+        </li>
+    </ul>
+
     <style scoped>
         :scope {
             display: block;
@@ -42,6 +41,10 @@
 
         .menu-block.active {
             background-color: #ddd !important;
+        }
+
+        .input {
+            width: 100%;
         }
 
     </style>
@@ -155,13 +158,13 @@
                 return;
 
             let optsHeight = this._optionList.offsetHeight;
-            let scrollTop  = this._optionList.scrollTop;
-            let selOffset  = selectedOption.offsetTop;
-            let selHeight  = selectedOption.offsetHeight;
+            let scrollTop = this._optionList.scrollTop;
+            let selOffset = selectedOption.offsetTop;
+            let selHeight = selectedOption.offsetHeight;
 
             if (selOffset + selHeight > scrollTop + optsHeight)
                 this._optionList.scrollTop +=
-                          selOffset
+                        selOffset
                         + selHeight
                         - scrollTop
                         - optsHeight;

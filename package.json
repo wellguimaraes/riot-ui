@@ -1,9 +1,10 @@
 {
   "name": "riot-ui",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A Riot UI kit",
   "main": "./dist/rui-min.js",
   "scripts": {
+    "build": "gulp tags"
   },
   "repository": {
     "type": "git",
