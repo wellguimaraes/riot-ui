@@ -8,8 +8,8 @@
                onfocus="{showOptions}"
                onblur="{hideOptions}"
                placeholder="{opts.placeholder}"/>
-        <ul class="menu is-small" name="_optionList" if="{shouldShowOptions && filteredCount()}">
-            <li class="menu-block is-small {active: index == active}"
+        <ul class="menu" name="_optionList" if="{shouldShowOptions && filteredCount()}">
+            <li class="menu-block {active: index == active}"
                each="{option, index in filtered}"
                onmouseover="{hoverOption}"
                onmousedown="{chooseCurrent}">{option.text}
@@ -22,7 +22,7 @@
             position: relative;
         }
 
-        nav.menu {
+        .menu {
             position: absolute;
             left: 0;
             top: calc(100% + 5px);
