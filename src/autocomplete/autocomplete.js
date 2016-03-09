@@ -1,54 +1,4 @@
-<autocomplete class="{focus: document.hasFocus() && _input === document.activeElement}">
-    <input type="text"
-           name="_input"
-           class="input"
-           onkeydown="{handleArrowKeys}"
-           onkeyup="{filterOptions}"
-           onfocus="{showOptions}"
-           onblur="{hideOptions}"
-           placeholder="{opts.placeholder}"/>
-    <ul class="menu" name="_optionList" if="{shouldShowOptions && filteredCount()}">
-        <li class="menu-block {active: index == active}"
-            each="{option, index in filtered}"
-            onmouseover="{hoverOption}"
-            onmousedown="{chooseCurrent}">{option.text}
-        </li>
-    </ul>
-
-    <style scoped>
-        :scope {
-            display: block;
-            position: relative;
-        }
-
-        .menu {
-            position: absolute;
-            left: 0;
-            top: calc(100% + 5px);
-            margin: 0;
-            padding: 0;
-            background-color: white;
-            max-height: 200px;
-            width: 100%;
-            overflow-y: hidden;
-            z-index: 99;
-            border-color: #08e;
-        }
-
-        .menu-block:hover {
-            background-color: transparent;
-        }
-
-        .menu-block.active {
-            background-color: #ddd !important;
-        }
-
-        .input {
-            width: 100%;
-        }
-
-    </style>
-    <script type="text/babel">
+riot.tag2('autocomplete', '<input type="text" name="_input" class="input" onkeydown="{handleArrowKeys}" onkeyup="{filterOptions}" onfocus="{showOptions}" onblur="{hideOptions}" placeholder="{opts.placeholder}"> <ul class="menu" name="_optionList" if="{shouldShowOptions && filteredCount()}"> <li class="menu-block {active: index == active}" each="{option, index in filtered}" onmouseover="{hoverOption}" onmousedown="{chooseCurrent}">{option.text} </li> </ul>', 'autocomplete,[riot-tag="autocomplete"] { display: block; position: relative; } autocomplete .menu,[riot-tag="autocomplete"] .menu { position: absolute; left: 0; top: calc(100% + 5px); margin: 0; padding: 0; background-color: white; max-height: 200px; width: 100%; overflow-y: hidden; z-index: 99; border-color: #08e; } autocomplete .menu-block:hover,[riot-tag="autocomplete"] .menu-block:hover { background-color: transparent; } autocomplete .menu-block.active,[riot-tag="autocomplete"] .menu-block.active { background-color: #ddd !important; } autocomplete .input,[riot-tag="autocomplete"] .input { width: 100%; }', 'class="{focus: document.hasFocus() && _input === document.activeElement}"', function(opts) {
         let keycode = rui.utils.keycode;
 
         this.active = 0;
@@ -147,7 +97,7 @@
             return true;
         };
 
-        this.lockHover = () => {
+        this.lockHover = function () {
             let _unlockHover = () => {
                 this.hoverLocked = false;
                 window.removeEventListener('mousemove', _unlockHover);
@@ -158,7 +108,7 @@
         };
 
         this.on('updated', () => {
-            // Scroll options
+
             let selectedOption = this._optionList.querySelector('.active');
 
             if (!selectedOption)
@@ -179,5 +129,4 @@
             if (selOffset <= scrollTop)
                 this._optionList.scrollTop = selOffset;
         });
-    </script>
-</autocomplete>
+}, '{ }');
