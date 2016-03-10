@@ -1,0 +1,31 @@
+autocomplete {
+    display: block;
+    position: relative;
+    
+    .menu {
+        position: absolute;
+        left: 0;
+        top: calc(100% + 5px);
+        margin: 0;
+        padding: 0;
+        background-color: white;
+        max-height: 200px;
+        width: 100%;
+        overflow-y: hidden;
+        z-index: 99;
+        border-color: #08e;
+    }
+    
+    .menu-block {
+        &:hover {
+            background-color: transparent;
+        }
+        &.active {
+            background-color: #ddd;
+        }
+    }
+    
+    .input {
+        width: 100%;
+    }
+}

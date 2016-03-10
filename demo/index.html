@@ -23,7 +23,7 @@
     </autocomplete>
 </div>
 <script src="https://cdn.jsdelivr.net/riot/2.3/riot.min.js" type="text/javascript"></script>
-<script src="../dist/rui.js" type="text/javascript"></script>
+<script src="../dist/riot-ui.js" type="text/javascript"></script>
 <script>
     var filter = function(opt) {
         return opt.text != "Alabama" && opt.text != "North Dakota";
@@ -92,12 +92,8 @@
         {key: "WA", text: "Washington"},
         {key: "WV", text: "West Virginia"},
         {key: "WI", text: "Wisconsin"},
-        {key: "WY", text: "Wyoming}"
+        {key: "WY", text: "Wyoming"}
     ];
-
-    options = Object.keys(options).map(function (s) {
-        return {key: s, text: options[s]};
-    });
 
     riot.mount('*');
 </script>

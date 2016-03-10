@@ -4,7 +4,8 @@
   "description": "A Riot UI kit",
   "main": "./dist/rui-min.js",
   "scripts": {
-    "build": "gulp tags"
+    "build": "webpack --progress --colors",
+    "build-watch": "webpack --progress --colors --watch"
   },
   "repository": {
     "type": "git",
@@ -28,9 +29,11 @@
   "devDependencies": {
     "babel": "^6.5.2",
     "babel-core": "^6.6.4",
+    "babel-loader": "^6.2.4",
     "babel-preset-es2015": "^6.3.13",
-    "babel-preset-es2015-riot": "^1.0.3",
+    "babel-preset-es2015-riot": "*",
     "browser-sync": "^2.11.1",
+    "css-loader": "^0.23.1",
     "gulp": "^3.9.0",
     "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.0",
@@ -38,7 +41,13 @@
     "gulp-minify": "0.0.5",
     "gulp-riot": "^0.4.4",
     "gulp-sourcemaps": "^1.6.0",
-    "riot": "^2.3.16",
-    "babel-preset-es2015-riot": "*"
+    "keycode": "^2.1.1",
+    "riot": "^2.3.17",
+    "riot-loader": "^1.0.0",
+    "riotjs-loader": "^2.0.0",
+    "style-loader": "^0.13.0",
+    "stylus-loader": "^1.5.1",
+    "webpack": "^1.12.14",
+    "webpack-dev-server": "^1.14.1"
   }
 }
