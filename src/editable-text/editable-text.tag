@@ -12,46 +12,9 @@
         <div name="_static" class="static-text {editing: editing}">{content}</div>
     </div>
 
-    <style scoped>
-        .editable-container {
-            position: relative;
-            display: block;
-        }
-
-        .static-text {
-            background: transparent !important;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
-        .static-text.editing {
-            opacity: 0;
-            position: absolute;
-            width: 100%;
-            top: 0;
-            left: 0;
-        }
-
-        .textarea {
-            color: inherit;
-            box-shadow: none !important;
-            outline: none !important;
-            padding: 0;
-            resize: none;
-            width: 100%;
-            display: block;
-            border: 5px solid transparent !important;
-            margin: -5px;
-            background: rgba(0, 0, 0, .06);
-            overflow: hidden;
-            border-radius: 4px;
-        }
-    </style>
-
     <script type="text/babel">
+        require('./editable-text.styl');
+    
         var keycode = require('keycode');
 
         this.editing = false;
@@ -102,6 +65,7 @@
             }
 
             this.resizeTextarea();
+            
             return true;
         };
     </script>
