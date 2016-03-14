@@ -39,7 +39,6 @@
         
         this.onconnect = this.opts.onconnect || ((resolve) => resolve());
         
-
         this.drawLine = (event) => {
             event.stopImmediatePropagation();
 
@@ -122,9 +121,13 @@
             this.drawing = false;
             this.update();
         };
-
-        window.__connectableEventBus.on(endDrawingEvent, (e, discardDrawTimeout) => {
-            var offsetTop = offset(this.root).top;
+        
+        this.thirdEndDrawingHandler = (e, discardDrawTimeout) => {
+            var offset = offset(this.root);
+            
+            if (!offset) return;
+            
+            var offsetTop = offset.top;
             
             var minY = offsetTop;
             var maxY = offsetTop + this.root.offsetHeight;
@@ -133,7 +136,11 @@
                 clearTimeout(discardDrawTimeout);
                 this.endDrawing(e);
             }
-        });
+        };
+        
+        this.on('unmount', () => window.__connectableEventBus.off(this.thirdEndDrawingHandler))
+
+        window.__connectableEventBus.on(endDrawingEvent, this.thirdEndDrawingHandler);
 
     </script>
 </connectable>

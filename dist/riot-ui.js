@@ -778,8 +778,12 @@
 	        _this.update();
 	    };
 
-	    window.__connectableEventBus.on(endDrawingEvent, (e, discardDrawTimeout) => {
-	        var offsetTop = offset(_this.root).top;
+	    this.thirdEndDrawingHandler = (e, discardDrawTimeout) => {
+	        var offset = offset(_this.root);
+
+	        if (!offset) return;
+
+	        var offsetTop = offset.top;
 
 	        var minY = offsetTop;
 	        var maxY = offsetTop + _this.root.offsetHeight;
@@ -788,7 +792,11 @@
 	            clearTimeout(discardDrawTimeout);
 	            _this.endDrawing(e);
 	        }
-	    });
+	    };
+
+	    this.on('unmount', () => window.__connectableEventBus.off(_this.thirdEndDrawingHandler));
+
+	    window.__connectableEventBus.on(endDrawingEvent, this.thirdEndDrawingHandler);
 	});
 
 /***/ },
