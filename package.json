@@ -2,14 +2,14 @@
   "name": "riot-ui",
   "version": "1.0.9",
   "description": "A Riot UI kit",
-  "main": "./dist/rui-min.js",
+  "main": "./dist/riot-ui.js",
   "scripts": {
     "build": "webpack --progress --colors",
     "build-watch": "webpack --progress --colors --watch"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wellguimaraes/rui.git"
+    "url": "git+https://github.com/wellguimaraes/riot-ui.git"
   },
   "keywords": [
     "riot",
