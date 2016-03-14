@@ -1,0 +1,34 @@
+floating-menu {
+    display: block;
+
+    .target {
+        display: inline;
+        cursor: default;
+    }
+    
+    .options {
+        background: #fff;
+        box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.4);
+        position: absolute;
+        z-index: 999;
+        width: 200px;
+        padding: 1px;
+        margin: 0;
+    }
+    
+    .options li {
+        list-style: none;
+        color: #333;
+        padding: 10px 20px;
+        cursor: pointer;
+        text-align: left;
+         -webkit-user-select: none;
+         -moz-user-select: none;
+         -ms-user-select: none;
+        user-select: none;
+    }
+    
+    .options li:hover {
+        background: #e4e4e4
+    }
+}
