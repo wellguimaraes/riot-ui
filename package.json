@@ -1,6 +1,6 @@
 {
   "name": "riot-ui",
-  "version": "1.0.27",
+  "version": "1.0.28",
   "description": "A Riot UI kit",
   "main": "./dist/riot-ui.js",
   "scripts": {

@@ -125,7 +125,7 @@
         this.thirdEndDrawingHandler = (e, discardDrawTimeout) => {
             var elemOffset = offset(this.root);
             
-            if (!offset) return;
+            if (!elemOffset) return;
             
             var offsetTop = elemOffset.top;
             
