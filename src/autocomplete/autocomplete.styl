@@ -5,27 +5,34 @@ autocomplete {
     .menu {
         position: absolute;
         left: 0;
-        top: calc(100% + 5px);
+        top: 100%;
         margin: 0;
         padding: 0;
         background-color: white;
-        max-height: 200px;
-        width: 100%;
+        max-height: 230px;
+        width: calc(100% + 14px);
         overflow-y: hidden;
         z-index: 99;
-        border-color: #08e;
+        border: 1px solid #ccc;
+        border-top: 0;
     }
     
-    .menu-block {
+    .menu-item {
+        padding: 7px;
+        
         &:hover {
             background-color: transparent;
         }
         &.active {
-            background-color: #ddd;
+            background-color: #eee;
         }
     }
     
     .input {
+        outline: none;
         width: 100%;
+        padding: 7px;
+        font-size: 1em;
+        border: 1px solid #ccc;
     }
 }

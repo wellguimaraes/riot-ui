@@ -1,101 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Riot UI Demo</title>
-    <style>
-        html {
-            padding: 20px !important;
-            background-color: #fff !important;
-        }
-    </style>
-</head>
-<body>
 
-<div>
-    <h4>Autocomplete</h4>
-    <autocomplete
-            options="{options}"
-            placeholder="Select a US state"
-            style="width: 300px"
-            onchange="{teste}"
-            filter="{filter}">
-    </autocomplete>
-</div>
-<script src="https://cdn.jsdelivr.net/riot/2.3/riot.min.js" type="text/javascript"></script>
-<script src="../dist/riot-ui.js" type="text/javascript"></script>
-<script>
-    var filter = function(opt) {
-        return opt.text != "Alabama" && opt.text != "North Dakota";
-    };
-    
-    var teste = function(novoValor) {
-        console.log('opa! mudou para ' + novoValor)
-    }
+    <head>
+        <meta charset="UTF-8">
+        <title>Riot UI Demo</title>
+        <style>
+            html {
+                font-family: arial, sans-serif;
+                padding: 20px !important;
+                background-color: #fff !important;
+            }
+            
+            .tag-demo {
+                border: 2px solid #ccc;
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            
+            h2, h3, h4, h5 {
+                margin: 0 0 20px 0;
+            }
+            
+            .connectable-list li {
+                border: 1px solid #ddd;
+                margin: 3px 0;
+                padding: 5px 8px;
+            }
+            
+            #connection-log {
+                margin-top: 10px;
+            }
+        </style>
+    </head>
 
-    var options = [
-        {key: "AL", text: "Alabama"},
-        {key: "AK", text: "Alaska"},
-        {key: "AS", text: "American Samoa"},
-        {key: "AZ", text: "Arizona"},
-        {key: "AR", text: "Arkansas"},
-        {key: "CA", text: "California"},
-        {key: "CO", text: "Colorado"},
-        {key: "CT", text: "Connecticut"},
-        {key: "DE", text: "Delaware"},
-        {key: "DC", text: "District Of Columbia"},
-        {key: "FM", text: "Federated States Of Micronesia"},
-        {key: "FL", text: "Florida"},
-        {key: "GA", text: "Georgia"},
-        {key: "GU", text: "Guam"},
-        {key: "HI", text: "Hawaii"},
-        {key: "ID", text: "Idaho"},
-        {key: "IL", text: "Illinois"},
-        {key: "IN", text: "Indiana"},
-        {key: "IA", text: "Iowa"},
-        {key: "KS", text: "Kansas"},
-        {key: "KY", text: "Kentucky"},
-        {key: "LA", text: "Louisiana"},
-        {key: "ME", text: "Maine"},
-        {key: "MH", text: "Marshall Islands"},
-        {key: "MD", text: "Maryland"},
-        {key: "MA", text: "Massachusetts"},
-        {key: "MI", text: "Michigan"},
-        {key: "MN", text: "Minnesota"},
-        {key: "MS", text: "Mississippi"},
-        {key: "MO", text: "Missouri"},
-        {key: "MT", text: "Montana"},
-        {key: "NE", text: "Nebraska"},
-        {key: "NV", text: "Nevada"},
-        {key: "NH", text: "New Hampshire"},
-        {key: "NJ", text: "New Jersey"},
-        {key: "NM", text: "New Mexico"},
-        {key: "NY", text: "New York"},
-        {key: "NC", text: "North Carolina"},
-        {key: "ND", text: "North Dakota"},
-        {key: "MP", text: "Northern Mariana Islands"},
-        {key: "OH", text: "Ohio"},
-        {key: "OK", text: "Oklahoma"},
-        {key: "OR", text: "Oregon"},
-        {key: "PW", text: "Palau"},
-        {key: "PA", text: "Pennsylvania"},
-        {key: "PR", text: "Puerto Rico"},
-        {key: "RI", text: "Rhode Island"},
-        {key: "SC", text: "South Carolina"},
-        {key: "SD", text: "South Dakota"},
-        {key: "TN", text: "Tennessee"},
-        {key: "TX", text: "Texas"},
-        {key: "UT", text: "Utah"},
-        {key: "VT", text: "Vermont"},
-        {key: "VI", text: "Virgin Islands"},
-        {key: "VA", text: "Virginia"},
-        {key: "WA", text: "Washington"},
-        {key: "WV", text: "West Virginia"},
-        {key: "WI", text: "Wisconsin"},
-        {key: "WY", text: "Wyoming"}
-    ];
+    <body>
 
-    riot.mount('*');
-</script>
-</body>
+        <div class="tag-demo">
+            <h2>Autocomplete</h2>
+            <p><em>Alabama</em> and <em>North Dakota</em> will not be listed due to custom filter</p>
+            <autocomplete 
+                options="{options}" 
+                placeholder="Select a US state" 
+                onchange="{logChanges}" 
+                filter="{filter}"
+                style="width: 300px">
+            </autocomplete>
+            
+            <script>
+                var filter = function(opt) {
+                    return opt.text != "Alabama" && opt.text != "North Dakota";
+                };
+                
+                var logChanges = function(newItem) {
+                    console.log('Changed to ' + newItem.text);
+                };
+                
+                var options = {
+                    AL: "Alabama",
+                    AK: "Alaska",
+                    AS: "American Samoa",
+                    AZ: "Arizona",
+                    AR: "Arkansas",
+                    CA: "California",
+                    CO: "Colorado",
+                    CT: "Connecticut",
+                    DE: "Delaware",
+                    DC: "District Of Columbia",
+                    FM: "Federated States Of Micronesia",
+                    FL: "Florida",
+                    GA: "Georgia",
+                    GU: "Guam",
+                    HI: "Hawaii",
+                    ID: "Idaho",
+                    IL: "Illinois",
+                    IN: "Indiana",
+                    IA: "Iowa",
+                    KS: "Kansas",
+                    KY: "Kentucky",
+                    LA: "Louisiana",
+                    ME: "Maine",
+                    MH: "Marshall Islands",
+                    MD: "Maryland",
+                    MA: "Massachusetts",
+                    MI: "Michigan",
+                    MN: "Minnesota",
+                    MS: "Mississippi",
+                    MO: "Missouri",
+                    MT: "Montana",
+                    NE: "Nebraska",
+                    NV: "Nevada",
+                    NH: "New Hampshire",
+                    NJ: "New Jersey",
+                    NM: "New Mexico",
+                    NY: "New York",
+                    NC: "North Carolina",
+                    ND: "North Dakota",
+                    MP: "Northern Mariana Islands",
+                    OH: "Ohio",
+                    OK: "Oklahoma",
+                    OR: "Oregon",
+                    PW: "Palau",
+                    PA: "Pennsylvania",
+                    PR: "Puerto Rico",
+                    RI: "Rhode Island",
+                    SC: "South Carolina",
+                    SD: "South Dakota",
+                    TN: "Tennessee",
+                    TX: "Texas",
+                    UT: "Utah",
+                    VT: "Vermont",
+                    VI: "Virgin Islands",
+                    VA: "Virginia",
+                    WA: "Washington",
+                    WV: "West Virginia",
+                    WI: "Wisconsin",
+                    WY: "Wyoming"
+                };
+                
+                options = Object.keys(options).map((state) => ({
+                    key: state, 
+                    text: options[state] 
+                })); 
+            </script>
+        </div>
+
+        <div class="tag-demo">
+            <h2>Connectable</h2>
+            <ol class="connectable-list">
+                <li><connectable onconnect="{connected}" color="hsla(  0, 50%, 50%, .8)" index="1">Mangosteen</connectable></li>
+                <li><connectable onconnect="{connected}" color="hsla( 80, 50%, 50%, .8)" index="2">Tangerine</connectable></li>
+                <li><connectable onconnect="{connected}" color="hsla(160, 50%, 50%, .8)" index="3">Banana</connectable></li>
+                <li><connectable onconnect="{connected}" color="hsla(240, 50%, 50%, .8)" index="4">Watermelon</connectable></li>
+            </ol>
+            
+            <h5>Connections log:</h5>
+            <div id="connection-log"></div>
+            
+            <script>
+                var connected = (resolve, origin, target, e) => {
+                    document.querySelector('#connection-log').innerHTML += `Connected ${origin.opts.index} to ${target.opts.index}<br/>`;
+                    resolve();
+                };
+            </script>
+        </div>
+        
+        <div class="tag-demo">
+            <h2>Toggle switch</h2>
+            <toggle-switch>Lorem ipsum</toggle-switch>
+        </div>
+        
+        <script src="https://cdn.jsdelivr.net/riot/2.3/riot.min.js" type="text/javascript"></script>
+        <script src="../dist/riot-ui.js" type="text/javascript"></script>
+        <script>
+            riot.mount('*');
+        </script>
+    </body>
+
 </html>

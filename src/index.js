@@ -1,1 +1,3 @@
-require('./autocomplete/autocomplete.tag');
+require('./autocomplete');
+require('./connectable');
+require('./toggle-switch');

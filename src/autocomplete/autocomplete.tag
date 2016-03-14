@@ -8,12 +8,13 @@
            onblur="{hideOptions}"
            placeholder="{opts.placeholder}"/>
     <ul class="menu" name="_optionList" if="{shouldShowOptions && filteredCount()}">
-        <li class="menu-block {active: index == active}"
+        <li class="menu-item {active: index == active}"
             each="{option, index in filtered}"
             onmouseover="{hoverOption}"
             onmousedown="{chooseCurrent}">{option.text}
         </li>
     </ul>
+    
 
     <script type="text/babel">
         require('./autocomplete.styl');

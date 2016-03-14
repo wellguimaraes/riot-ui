@@ -1,0 +1,44 @@
+toggle-switch {
+    display: table;
+    
+    .switch,
+    .label {
+        vertical-align: middle;
+        display: table-cell;
+    }
+    
+    .label {
+        padding-left: 10px;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        cursor: default;
+    }
+    
+    .switch {
+        background: #ddd;
+        width: 48px;
+        height: 24px;
+        border-radius: 12px;
+        
+        > .ball {
+            float: left
+        }
+    }
+    
+    .switch.checked {
+        background: limegreen;
+        
+        > .ball {
+            float: right
+        }
+    }
+    
+    .ball {
+        background: #fff;
+        border-radius: 50%;
+        height: 20px;
+        width: 20px;
+        margin: 2px;
+    }
+}
