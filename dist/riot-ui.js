@@ -794,8 +794,6 @@
 	        }
 	    };
 
-	    this.on('unmount', () => window.__connectableEventBus.off(_this.thirdEndDrawingHandler));
-
 	    window.__connectableEventBus.on(endDrawingEvent, this.thirdEndDrawingHandler);
 	});
 

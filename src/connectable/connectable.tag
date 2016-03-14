@@ -138,8 +138,6 @@
             }
         };
         
-        this.on('unmount', () => window.__connectableEventBus.off(this.thirdEndDrawingHandler))
-
         window.__connectableEventBus.on(endDrawingEvent, this.thirdEndDrawingHandler);
 
     </script>
