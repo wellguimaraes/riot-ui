@@ -59,7 +59,7 @@
 
 	    __webpack_require__(2);
 
-	    let keycode = __webpack_require__(6);
+	    var keycode = __webpack_require__(6);
 
 	    this.active = 0;
 	    this.filtered = (this.opts.options || []).filter(opt => {
@@ -108,7 +108,7 @@
 	                return true;
 	        }
 
-	        let queryRegex = new RegExp(`(^|\\s)${ _this._input.value.trim() }`, 'i');
+	        var queryRegex = new RegExp(`(^|\\s)${ _this._input.value.trim() }`, 'i');
 
 	        _this.filtered = (_this.opts.options || []).filter(opt => queryRegex.test(opt.text) && (!_this.opts.filter || _this.opts.filter(opt)));
 
@@ -119,7 +119,7 @@
 	    };
 
 	    this.chooseCurrent = () => {
-	        let chosen = _this.filtered[_this.active];
+	        var chosen = _this.filtered[_this.active];
 
 	        _this._input.value = chosen.text;
 
@@ -154,7 +154,7 @@
 	    };
 
 	    this.lockHover = () => {
-	        let _unlockHover = () => {
+	        var _unlockHover = () => {
 	            _this.hoverLocked = false;
 	            window.removeEventListener('mousemove', _unlockHover);
 	        };
@@ -165,14 +165,14 @@
 
 	    this.on('updated', () => {
 	        // Scroll options
-	        let selectedOption = _this._optionList.querySelector('.active');
+	        var selectedOption = _this._optionList.querySelector('.active');
 
 	        if (!selectedOption) return;
 
-	        let optsHeight = _this._optionList.offsetHeight;
-	        let scrollTop = _this._optionList.scrollTop;
-	        let selOffset = selectedOption.offsetTop;
-	        let selHeight = selectedOption.offsetHeight;
+	        var optsHeight = _this._optionList.offsetHeight;
+	        var scrollTop = _this._optionList.scrollTop;
+	        var selOffset = selectedOption.offsetTop;
+	        var selHeight = selectedOption.offsetHeight;
 
 	        if (selOffset + selHeight > scrollTop + optsHeight) _this._optionList.scrollTop += selOffset + selHeight - scrollTop - optsHeight;
 

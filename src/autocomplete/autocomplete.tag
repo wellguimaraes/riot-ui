@@ -19,7 +19,7 @@
     <script type="text/babel">
         require('./autocomplete.styl');
 
-        let keycode = require('keycode');
+        var keycode = require('keycode');
         
         this.active = 0;
         this.filtered = (this.opts.options || []).filter((opt) => {
@@ -69,7 +69,7 @@
                     return true;
             }
         
-            let queryRegex = new RegExp(`(^|\\s)${this._input.value.trim()}`, 'i');
+            var queryRegex = new RegExp(`(^|\\s)${this._input.value.trim()}`, 'i');
         
             this.filtered = (this.opts.options || []).filter((opt) =>
                 queryRegex.test(opt.text) && (!this.opts.filter || this.opts.filter(opt))
@@ -82,7 +82,7 @@
         };
         
         this.chooseCurrent = () => {
-            let chosen = this.filtered[this.active];
+            var chosen = this.filtered[this.active];
         
             this._input.value = chosen.text;
         
@@ -118,7 +118,7 @@
         };
         
         this.lockHover = () => {
-            let _unlockHover = () => {
+            var _unlockHover = () => {
                 this.hoverLocked = false;
                 window.removeEventListener('mousemove', _unlockHover);
             };
@@ -129,15 +129,15 @@
         
         this.on('updated', () => {
             // Scroll options
-            let selectedOption = this._optionList.querySelector('.active');
+            var selectedOption = this._optionList.querySelector('.active');
         
             if (!selectedOption)
                 return;
         
-            let optsHeight = this._optionList.offsetHeight;
-            let scrollTop = this._optionList.scrollTop;
-            let selOffset = selectedOption.offsetTop;
-            let selHeight = selectedOption.offsetHeight;
+            var optsHeight = this._optionList.offsetHeight;
+            var scrollTop = this._optionList.scrollTop;
+            var selOffset = selectedOption.offsetTop;
+            var selHeight = selectedOption.offsetHeight;
         
             if (selOffset + selHeight > scrollTop + optsHeight)
                 this._optionList.scrollTop +=
