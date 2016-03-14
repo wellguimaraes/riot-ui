@@ -1,4 +1,3 @@
-<!--suppress ThisExpressionReferencesGlobalObjectJS -->
 <editable-text>
     <div class="editable-container" ondblclick="{enableEditing}">
         <textarea if="{editing}"

@@ -126,8 +126,6 @@
         window.__connectableEventBus.on(endDrawingEvent, (e, discardDrawTimeout) => {
             var offsetTop = offset(this.root).top;
             
-            debugger;
-
             var minY = offsetTop;
             var maxY = offsetTop + this.root.offsetHeight;
 

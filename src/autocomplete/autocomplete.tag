@@ -22,7 +22,7 @@
         let keycode = require('keycode');
         
         this.active = 0;
-        this.filtered = this.opts.options.filter((opt) => {
+        this.filtered = (this.opts.options || []).filter((opt) => {
             return !this.opts.filter || this.opts.filter(opt);
         });
         
@@ -71,7 +71,7 @@
         
             let queryRegex = new RegExp(`(^|\\s)${this._input.value.trim()}`, 'i');
         
-            this.filtered = this.opts.options.filter((opt) =>
+            this.filtered = (this.opts.options || []).filter((opt) =>
                 queryRegex.test(opt.text) && (!this.opts.filter || this.opts.filter(opt))
             );
         
