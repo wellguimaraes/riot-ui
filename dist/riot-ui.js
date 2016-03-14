@@ -779,11 +779,11 @@
 	    };
 
 	    this.thirdEndDrawingHandler = (e, discardDrawTimeout) => {
-	        var offset = offset(_this.root);
+	        var elemOffset = offset(_this.root);
 
 	        if (!offset) return;
 
-	        var offsetTop = offset.top;
+	        var offsetTop = elemOffset.top;
 
 	        var minY = offsetTop;
 	        var maxY = offsetTop + _this.root.offsetHeight;
