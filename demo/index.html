@@ -164,7 +164,11 @@
 
         <div class="tag-demo">
             <h2>Toggle Switch</h2>
-            <toggle-switch>Lorem ipsum</toggle-switch>
+            <toggle-switch if="{z || y}">Lorem ipsum</toggle-switch>
+            <script>
+                var z = true;
+                var  y = false; 
+            </script>
         </div>
         
         <div class="tag-demo">

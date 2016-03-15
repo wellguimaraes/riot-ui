@@ -9,7 +9,7 @@
     <script type="text/babel">
         require('./toggle-switch.styl')
     
-        this.active = this.opts.active;
+        this.active = !!this.opts.active;
 
         this.setActive = (active) => {
             this.active = active;

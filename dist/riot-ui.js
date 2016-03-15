@@ -835,7 +835,7 @@
 
 	    __webpack_require__(10);
 
-	    this.active = this.opts.active;
+	    this.active = !!this.opts.active;
 
 	    this.setActive = active => {
 	        _this.active = active;
@@ -975,7 +975,7 @@
 
 
 	// module
-	exports.push([module.id, "floating-menu {\n  display: block;\n}\nfloating-menu .target {\n  display: inline;\n  cursor: default;\n}\nfloating-menu .options {\n  background: #fff;\n  box-shadow: 1px 1px 20px rgba(0,0,0,0.4);\n  position: absolute;\n  z-index: 999;\n  width: 200px;\n  padding: 1px;\n  margin: 0;\n}\nfloating-menu .options li {\n  list-style: none;\n  color: #333;\n  padding: 10px 20px;\n  cursor: pointer;\n  text-align: left;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\nfloating-menu .options li:hover {\n  background: #e4e4e4;\n}\n", ""]);
+	exports.push([module.id, "floating-menu {\n  display: inline-block;\n}\nfloating-menu .target {\n  display: inline;\n  cursor: default;\n}\nfloating-menu .options {\n  background: #fff;\n  box-shadow: 1px 1px 20px rgba(0,0,0,0.4);\n  position: absolute;\n  z-index: 999;\n  width: 200px;\n  padding: 1px;\n  margin: 0;\n}\nfloating-menu .options li {\n  list-style: none;\n  color: #333;\n  padding: 10px 20px;\n  cursor: pointer;\n  text-align: left;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\nfloating-menu .options li:hover {\n  background: #e4e4e4;\n}\n", ""]);
 
 	// exports
 
@@ -1079,7 +1079,7 @@
 
 
 	// module
-	exports.push([module.id, "editable-text .editable-container {\n  position: relative;\n  display: block;\n}\neditable-text .static-text {\n  background: transparent !important;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\neditable-text .static-text.editing {\n  opacity: 0;\n  position: absolute;\n  width: 100%;\n  top: 0;\n  left: 0;\n}\neditable-text .textarea {\n  font-family: sans-serif;\n  font-size: 1em;\n  color: inherit;\n  box-shadow: none !important;\n  outline: none !important;\n  padding: 0;\n  resize: none;\n  width: 100%;\n  display: block;\n  border: 0.5em solid transparent !important;\n  margin: -0.5em;\n  background: rgba(0,0,0,0.1);\n  overflow: hidden;\n}\n", ""]);
+	exports.push([module.id, "editable-text .editable-container {\n  position: relative;\n  display: block;\n}\neditable-text .static-text {\n  background: transparent !important;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\neditable-text .static-text.editing {\n  opacity: 0;\n  position: absolute;\n  width: 100%;\n  top: 0;\n  left: 0;\n}\neditable-text .textarea {\n  font-family: inherit, sans-serif;\n  font-size: 1em;\n  color: inherit;\n  box-shadow: none !important;\n  outline: none !important;\n  padding: 0;\n  resize: none;\n  width: 100%;\n  display: block;\n  border: 0.5em solid transparent !important;\n  margin: -0.5em;\n  background: rgba(0,0,0,0.1);\n  overflow: hidden;\n}\n", ""]);
 
 	// exports
 
