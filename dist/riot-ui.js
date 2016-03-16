@@ -46,9 +46,9 @@
 
 	__webpack_require__(1);
 	__webpack_require__(7);
-	__webpack_require__(9);
-	__webpack_require__(12);
-	__webpack_require__(15);
+	__webpack_require__(11);
+	__webpack_require__(14);
+	__webpack_require__(17);
 
 /***/ },
 /* 1 */
@@ -685,11 +685,13 @@
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	riot.tag2('connectable', '<div onmousedown="{startDrawing}" style="position: relative"> <yield></yield> </div> <div if="{drawing}" name="_svgContainer" class="svg-container"> <svg height="100%" width="100%"> <path name="_connectionLine" stroke="{color}" stroke-width="2" fill="none" d=""></path> <circle name="_circleOrigin" r="4" fill="{color}"></circle> <circle name="_circleTarget" r="4" fill="{color}"></circle> </svg> </div>', 'connectable,[riot-tag="connectable"],[data-is="connectable"]{ cursor: crosshair; display: block; } connectable .svg-container,[riot-tag="connectable"] .svg-container,[data-is="connectable"] .svg-container{ z-index: 800; width: 100%; height: 100%; position: fixed; top: 0; left: 0 }', '', function (opts) {
+	riot.tag2('connectable', '<div onmousedown="{startDrawing}" class="content"> <yield></yield> </div> <div if="{drawing}" name="_svgContainer" class="svg-container"> <svg height="100%" width="100%"> <path name="_connectionLine" stroke="{color}" stroke-width="2" fill="none" d=""></path> <circle name="_circleOrigin" r="4" fill="{color}"></circle> <circle name="_circleTarget" r="4" fill="{color}"></circle> </svg> </div>', '', '', function (opts) {
 	    var _this = this;
 
+	    __webpack_require__(8);
+
 	    var endDrawingEvent = 'connectable:endDrawing';
-	    var offset = __webpack_require__(8).offset;
+	    var offset = __webpack_require__(10).offset;
 
 	    window.__connectableEventBus = window.__connectableEventBus || riot.observable({});
 
@@ -707,7 +709,14 @@
 	            y: event.clientY
 	        };
 
-	        _this._connectionLine.setAttribute('d', `M ${ _this.from.x } ${ _this.from.y } q ${ to.x - _this.from.x } 0 ${ to.x - _this.from.x } ${ to.y - _this.from.y }`);
+	        var line = `M
+	                ${ _this.from.x }
+	                ${ _this.from.y } q
+	                ${ to.x - _this.from.x } 0
+	                ${ to.x - _this.from.x }
+	                ${ to.y - _this.from.y }`;
+
+	        _this._connectionLine.setAttribute('d', line);
 	        _this._circleOrigin.setAttribute('cx', _this.from.x);
 	        _this._circleOrigin.setAttribute('cy', _this.from.y);
 	        _this._circleTarget.setAttribute('cx', to.x);
@@ -799,6 +808,46 @@
 
 /***/ },
 /* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(9);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(5)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/stylus-loader/index.js!./connectable.styl", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/stylus-loader/index.js!./connectable.styl");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(4)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "connectable {\n  cursor: crosshair;\n  display: block;\n}\nconnectable .content {\n  position: relative;\n}\nconnectable .svg-container {\n  z-index: 800;\n  width: 100%;\n  height: 100%;\n  position: fixed;\n  top: 0;\n  left: 0;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 10 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -827,13 +876,13 @@
 	};
 
 /***/ },
-/* 9 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	riot.tag2('toggle-switch', '<div class="switch {checked: active}"> <div class="ball"></div> </div> <div class="label"> <yield></yield> </div>', '', 'onclick="{action}"', function (opts) {
 	    var _this = this;
 
-	    __webpack_require__(10);
+	    __webpack_require__(12);
 
 	    this.active = !!this.opts.active;
 
@@ -848,13 +897,13 @@
 	});
 
 /***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(11);
+	var content = __webpack_require__(13);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(5)(content, {});
@@ -874,7 +923,7 @@
 	}
 
 /***/ },
-/* 11 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(4)();
@@ -888,15 +937,15 @@
 
 
 /***/ },
-/* 12 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	riot.tag2('floating-menu', '<div class="target" onclick="{toggle}"> <yield></yield> </div> <ul class="options" each="{open ? [1] : []}"> <li each="{option in getOptions()}" onclick="{action}">{option.name}</li> </ul>', '', '', function (opts) {
 	    var _this = this;
 
-	    __webpack_require__(13);
+	    __webpack_require__(15);
 
-	    var offset = __webpack_require__(8).offset;
+	    var offset = __webpack_require__(10).offset;
 	    var actions = {
 	        CLOSE_OTHERS: "floating-menu:close-others"
 	    };
@@ -941,13 +990,13 @@
 	});
 
 /***/ },
-/* 13 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(14);
+	var content = __webpack_require__(16);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(5)(content, {});
@@ -967,7 +1016,7 @@
 	}
 
 /***/ },
-/* 14 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(4)();
@@ -981,23 +1030,52 @@
 
 
 /***/ },
-/* 15 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
-	riot.tag2('editable-text', '<div class="editable-container" ondblclick="{enableEditing}"> <textarea if="{editing}" name="_editable" class="textarea" onkeydown="{handleInput}" onblur="{cancelEditing}" type="text" placeholder="{opts.placeholder}">{content}</textarea> <div name="_static" class="static-text {editing: editing}">{content}</div> </div>', '', '', function (opts) {
+	riot.tag2('editable-text', '<div name="_editable" class="editable" onkeydown="{handleInput}" onblur="{saveEditing}" ondblclick="{enableEditing}" onpaste="{handlePaste}" contenteditable="{editing}">{content}</div>', '', '', function (opts) {
 	    var _this = this;
 
-	    __webpack_require__(16);
+	    __webpack_require__(18);
 
 	    var keycode = __webpack_require__(6);
 
 	    this.editing = false;
 	    this.content = this.opts.content;
 
-	    this.resizeTextarea = () => {
-	        _this._static.innerText = _this._editable.value || 'x';
-	        _this._editable.style.height = _this._static.offsetHeight + 'px';
-	        _this._static.innerText = _this._editable.value || '';
+	    this.handlePaste = e => {
+	        var pastedText = undefined;
+
+	        if (window.clipboardData && window.clipboardData.getData) {
+	            // IE
+	            pastedText = window.clipboardData.getData('Text');
+	        } else if (e.clipboardData && e.clipboardData.getData) {
+	            pastedText = e.clipboardData.getData('text/plain');
+	        }
+
+	        e.preventDefault();
+
+	        document.execCommand("insertHTML", false, pastedText);
+
+	        return false;
+	    };
+
+	    this.moveCaretToTheEnd = () => {
+	        var range, selection;
+
+	        if (document.createRange) {
+	            range = document.createRange();
+	            range.selectNodeContents(_this._editable);
+	            range.collapse(false);
+	            selection = window.getSelection();
+	            selection.removeAllRanges();
+	            selection.addRange(range);
+	        } else if (document.selection) {
+	            range = document.body.createTextRange();
+	            range.moveToElementText(_this._editable);
+	            range.collapse(false);
+	            range.select();
+	        }
 	    };
 
 	    this.enableEditing = () => {
@@ -1006,15 +1084,12 @@
 	        _this.update({ editing: true });
 	        _this._editable.focus();
 
-	        // place the cursor at the end of the text field
-	        _this._editable.value = '';
-	        _this._editable.value = _this.content;
-
-	        _this.resizeTextarea();
+	        _this.moveCaretToTheEnd();
 	    };
 
 	    this.saveEditing = options => {
-	        _this.content = _this._editable.value;
+	        _this.content = _this._editable.textContent;
+	        _this._editable.innerHTML = _this.content;
 	        _this.opts.oncontentchange && _this.opts.oncontentchange(_this.content);
 
 	        _this.editing = false;
@@ -1023,35 +1098,42 @@
 
 	    this.cancelEditing = () => {
 	        _this.editing = false;
+	        _this._editable.innerHTML = _this.content;
 	    };
 
 	    this.handleInput = e => {
+	        if (e.ctrlKey) {
+	            switch (e.keyCode) {
+	                case 66: // B
+	                case 73: // I
+	                case 85:
+	                    // U
+	                    return _this.opts.allowHtml || false;
+	            }
+	        }
+
 	        switch (e.keyCode) {
 	            case keycode('enter'):
 	                _this.saveEditing();
-	                _this.resizeTextarea();
 	                return false;
 
 	            case keycode('esc'):
 	                _this.cancelEditing();
-	                _this.resizeTextarea();
 	                return false;
 	        }
-
-	        _this.resizeTextarea();
 
 	        return true;
 	    };
 	});
 
 /***/ },
-/* 16 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(17);
+	var content = __webpack_require__(19);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(5)(content, {});
@@ -1071,7 +1153,7 @@
 	}
 
 /***/ },
-/* 17 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(4)();
@@ -1079,7 +1161,7 @@
 
 
 	// module
-	exports.push([module.id, "editable-text .editable-container {\n  position: relative;\n  display: block;\n}\neditable-text .static-text {\n  background: transparent !important;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\neditable-text .static-text.editing {\n  opacity: 0;\n  position: absolute;\n  width: 100%;\n  top: 0;\n  left: 0;\n}\neditable-text .textarea {\n  font-family: inherit, sans-serif;\n  font-size: 1em;\n  color: inherit;\n  box-shadow: none !important;\n  outline: none !important;\n  padding: 0;\n  resize: none;\n  width: 100%;\n  display: block;\n  border: 0.5em solid transparent !important;\n  margin: -0.5em;\n  background: rgba(0,0,0,0.1);\n  overflow: hidden;\n}\n", ""]);
+	exports.push([module.id, "editable-text .editable {\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\neditable-text .editable[contenteditable=true] {\n  background: rgba(0,0,0,0.2);\n  padding: 0.4em 0.5em;\n  margin: -0.4em -0.5em;\n  outline: none;\n  -webkit-user-select: text;\n  -moz-user-select: text;\n  -ms-user-select: text;\n  user-select: text;\n}\n", ""]);
 
 	// exports
 

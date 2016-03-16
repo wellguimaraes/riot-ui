@@ -1,5 +1,5 @@
 <connectable>
-    <div onmousedown="{startDrawing}" style="position: relative">
+    <div onmousedown="{startDrawing}" class="content">
         <yield/>
     </div>
 
@@ -11,23 +11,9 @@
         </svg>
     </div>
 
-    <style scoped>
-        :scope {
-            cursor: crosshair;
-            display: block;
-        }
-    
-        .svg-container {
-            z-index: 800;
-            width: 100%;
-            height: 100%;
-            position: fixed;
-            top: 0;
-            left: 0
-        }
-    </style>
-    
     <script type="text/babel">
+        require('./connectable.styl');
+    
         var endDrawingEvent = 'connectable:endDrawing';
         var offset = require('../utils').offset;
         
@@ -47,7 +33,14 @@
                 y: event.clientY
             };
 
-            this._connectionLine.setAttribute('d', `M ${this.from.x} ${this.from.y} q ${to.x - this.from.x} 0 ${to.x - this.from.x} ${to.y - this.from.y}`);
+            var line = `M 
+                ${this.from.x} 
+                ${this.from.y} q 
+                ${to.x - this.from.x} 0 
+                ${to.x - this.from.x} 
+                ${to.y - this.from.y}`;
+            
+            this._connectionLine.setAttribute('d', line);
             this._circleOrigin.setAttribute('cx', this.from.x);
             this._circleOrigin.setAttribute('cy', this.from.y);
             this._circleTarget.setAttribute('cx', to.x);
