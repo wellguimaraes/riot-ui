@@ -41,7 +41,7 @@
         <div class="tag-demo">
             <h2>Autocomplete</h2>
             <p><em>Alabama</em> and <em>North Dakota</em> will not be listed due to custom filter</p>
-            <autocomplete options="{options}" placeholder="Select a US state" onchange="{logChanges}" filter="{filter}" style="width: 300px">
+            <autocomplete options="{options}" placeholder="Select a US state" onselect="{logChanges}" filter="{filter}" style="width: 300px">
             </autocomplete>
 
             <script>
@@ -148,17 +148,22 @@
             <floating-menu options="{ floatingOptions }">Then click here</floating-menu>
             <floating-menu options="{ floatingOptions }">Click here first</floating-menu>
             <script>
-                var floatingOptions = [{
-                    name: 'Lorem Ipsum',
-                    action: function() {
+                var floatingOptions=[ {
+                    name: 'Lorem Ipsum', action: function() {
                         alert('clicked lorem ipsum');
                     }
-                }, {
-                    name: 'Dolor sit amet',
-                    action: function() {
+                },{
+                    name: 'Lorem Ipsum', action: function() {
+                        alert('clicked lorem ipsum');
+                    }
+                },{
+                    separator: true,
+                    name: 'Dolor sit amet', action: function() {
                         console.log('logged dolor sit amet');
                     }
-                }];
+                }
+                
+                ];
             </script>
         </div>
 
@@ -173,7 +178,12 @@
         
         <div class="tag-demo">
             <h2>Editable Text</h2>
-            <editable-text content="Double click here to edit text"></editable-text>
+            <editable-text oncontentchange="{showChanges}" content="Double click here to edit text"></editable-text>
+            <script>
+                var showChanges = function(newValue) {
+                    console.log(newValue);
+                }
+            </script>
         </div>
 
 

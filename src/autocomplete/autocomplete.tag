@@ -18,6 +18,7 @@
 
     <script type="text/babel">
         require('./autocomplete.styl');
+        var latinMap = require('../utils').latinMap;
 
         var keycode = require('keycode');
         
@@ -50,6 +51,8 @@
             this.shouldShowOptions = true;
         };
         
+        var latinise = (s) => s.replace(/[^A-Za-z0-9\[\] ]/g, (x) => latinMap[x] || x);
+        
         this.filterOptions = (e) => {
             var keyCode = e ? e.keyCode : -1 || -1;
         
@@ -69,10 +72,10 @@
                     return true;
             }
         
-            var queryRegex = new RegExp(`(^|\\s)${this._input.value.trim()}`, 'i');
+            var queryRegex = new RegExp(`(^|\\s)${latinise(this._input.value.trim())}`, 'i');
         
             this.filtered = (this.opts.options || []).filter((opt) =>
-                queryRegex.test(opt.text) && (!this.opts.filter || this.opts.filter(opt))
+                queryRegex.test(latinise(opt.text)) && (!this.opts.filter || this.opts.filter(opt))
             );
         
             this.active = 0;
@@ -82,12 +85,15 @@
         };
         
         this.chooseCurrent = () => {
+            if (this.active > this.filtered.length - 1)
+                return;
+            
             var chosen = this.filtered[this.active];
         
             this._input.value = chosen.text;
         
-            if (this.opts.onchange && this.selected != chosen)
-                this.opts.onchange(chosen);
+            if (this.opts.onselect && this.selected != chosen)
+                this.opts.onselect(chosen);
         
             this.selected = chosen;
         

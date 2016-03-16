@@ -1,13 +1,23 @@
 editable-text {
-    .editable {
+    display: block;
+    
+    .editable, 
+    .placeholder {
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
     }
     
+    .editable {
+        background: transparent;
+        padding: .4em .5em;
+        margin: -.4em -.5em;
+    }
+    
+    
     .editable[contenteditable=true] {
-        background: rgba(0,0,0,.2);
+        background: rgba(0, 0, 0, .1);
         padding: .4em .5em;
         margin: -.4em -.5em;
         outline: none;

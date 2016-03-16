@@ -3,8 +3,7 @@
         <yield/>
     </div>
     <ul class="options" each="{ open ? [1] : [] }">
-        <li each="{ option in getOptions() }" 
-            onclick="{action}">{option.name}</li>
+        <li each="{ option in getOptions() }" onclick="{action}" class="{ separator: option.separator }">{option.name}</li>
     </ul>
 
     <script type="text/babel">

@@ -1,12 +1,13 @@
-<editable-text>
+<editable-text ondblclick="{enableEditing}">
+    <div class="placeholder" if="{!editing && showPlaceholder}">{opts.placeholder || '&nbsp;'}</div>
     <div 
         name="_editable"
         class="editable"
         onkeydown="{handleInput}"
         onblur="{saveEditing}"
-        ondblclick="{enableEditing}"
         onpaste="{handlePaste}"
         contenteditable="{editing}">{content}</div>
+    
 
     <script type="text/babel">
         require('./editable-text.styl');
@@ -31,7 +32,7 @@
             
             return false;
         }
-
+        
         this.moveCaretToTheEnd = () =>
         {
             var range, selection;
@@ -56,13 +57,15 @@
 
             this.update({editing: true});
             this._editable.focus();
-
             this.moveCaretToTheEnd();
         };
 
         this.saveEditing = (options) => {
+            if (!this.editing) return;
+            
             this.content = this._editable.textContent;
             this._editable.innerHTML = this.content;
+            this.showPlaceholder = !this.content;
             this.opts.oncontentchange && this.opts.oncontentchange(this.content);
 
             this.editing = false;

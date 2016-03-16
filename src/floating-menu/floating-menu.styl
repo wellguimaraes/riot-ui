@@ -14,21 +14,25 @@ floating-menu {
         width: 200px;
         padding: 1px;
         margin: 0;
+        
+        li {
+            list-style: none;
+            color: #333;
+            padding: 10px 20px;
+            cursor: pointer;
+            text-align: left;
+             -webkit-user-select: none;
+             -moz-user-select: none;
+             -ms-user-select: none;
+            user-select: none;
+            
+            &:hover {
+                background: #e4e4e4
+            }
+        }
     }
     
-    .options li {
-        list-style: none;
-        color: #333;
-        padding: 10px 20px;
-        cursor: pointer;
-        text-align: left;
-         -webkit-user-select: none;
-         -moz-user-select: none;
-         -ms-user-select: none;
-        user-select: none;
-    }
-    
-    .options li:hover {
-        background: #e4e4e4
+    .separator {
+        border-top: 1px solid #ccc
     }
 }

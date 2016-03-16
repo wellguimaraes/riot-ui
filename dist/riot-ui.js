@@ -45,7 +45,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	__webpack_require__(7);
+	__webpack_require__(8);
 	__webpack_require__(11);
 	__webpack_require__(14);
 	__webpack_require__(17);
@@ -58,8 +58,9 @@
 	    var _this = this;
 
 	    __webpack_require__(2);
+	    var latinMap = __webpack_require__(6).latinMap;
 
-	    var keycode = __webpack_require__(6);
+	    var keycode = __webpack_require__(7);
 
 	    this.active = 0;
 	    this.filtered = (this.opts.options || []).filter(opt => {
@@ -89,6 +90,8 @@
 	        _this.shouldShowOptions = true;
 	    };
 
+	    var latinise = s => s.replace(/[^A-Za-z0-9\[\] ]/g, x => latinMap[x] || x);
+
 	    this.filterOptions = e => {
 	        var keyCode = e ? e.keyCode : -1 || -1;
 
@@ -108,9 +111,9 @@
 	                return true;
 	        }
 
-	        var queryRegex = new RegExp(`(^|\\s)${ _this._input.value.trim() }`, 'i');
+	        var queryRegex = new RegExp(`(^|\\s)${ latinise(_this._input.value.trim()) }`, 'i');
 
-	        _this.filtered = (_this.opts.options || []).filter(opt => queryRegex.test(opt.text) && (!_this.opts.filter || _this.opts.filter(opt)));
+	        _this.filtered = (_this.opts.options || []).filter(opt => queryRegex.test(latinise(opt.text)) && (!_this.opts.filter || _this.opts.filter(opt)));
 
 	        _this.active = 0;
 	        _this.showOptions();
@@ -119,11 +122,13 @@
 	    };
 
 	    this.chooseCurrent = () => {
+	        if (_this.active > _this.filtered.length - 1) return;
+
 	        var chosen = _this.filtered[_this.active];
 
 	        _this._input.value = chosen.text;
 
-	        if (_this.opts.onchange && _this.selected != chosen) _this.opts.onchange(chosen);
+	        if (_this.opts.onselect && _this.selected != chosen) _this.opts.onselect(chosen);
 
 	        _this.selected = chosen;
 
@@ -534,6 +539,99 @@
 /* 6 */
 /***/ function(module, exports) {
 
+	module.exports = {
+	    offset: function (elem, options) {
+	        var docElem;
+	        var rect;
+	        var doc;
+
+	        if (!elem) {
+	            return;
+	        }
+
+	        rect = elem.getBoundingClientRect();
+
+	        // Make sure element is not hidden (display: none) or disconnected
+	        if (rect.width || rect.height || elem.getClientRects().length) {
+	            doc = elem.ownerDocument;
+	            docElem = doc.documentElement;
+
+	            return {
+	                top: rect.top + window.pageYOffset - docElem.clientTop,
+	                left: rect.left + window.pageXOffset - docElem.clientLeft
+	            };
+	        }
+	    },
+
+	    latinMap: {
+	        "À": "A",
+	        "Á": "A",
+	        "Ã": "A",
+	        "Â": "A",
+	        "Ä": "A",
+
+	        "É": "E",
+	        "È": "E",
+	        "Ê": "E",
+	        "Ë": "E",
+
+	        "Í": "I",
+	        "Ì": "I",
+	        "Í": "I",
+	        "Î": "I",
+	        "Ï": "I",
+
+	        "Ó": "O",
+	        "Ò": "O",
+	        "Ô": "O",
+	        "Õ": "O",
+	        "Ö": "O",
+
+	        "Ú": "U",
+	        "Ù": "U",
+	        "Û": "U",
+	        "Ü": "U",
+
+	        "Ç": "C",
+	        "Ñ": "N",
+
+	        "à": "a",
+	        "á": "a",
+	        "ã": "a",
+	        "â": "a",
+	        "ä": "a",
+
+	        "é": "e",
+	        "è": "e",
+	        "ê": "e",
+	        "ë": "e",
+
+	        "í": "i",
+	        "ì": "i",
+	        "í": "i",
+	        "î": "i",
+	        "ï": "i",
+
+	        "ó": "o",
+	        "ò": "o",
+	        "ô": "o",
+	        "õ": "o",
+	        "ö": "o",
+
+	        "ú": "u",
+	        "ù": "u",
+	        "û": "u",
+	        "ü": "u",
+
+	        "ç": "c",
+	        "ñ": "n"
+	    }
+	};
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
 	// Source: http://jsfiddle.net/vWx8V/
 	// http://stackoverflow.com/questions/5603195/full-list-of-javascript-keycodes
 
@@ -682,16 +780,16 @@
 
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	riot.tag2('connectable', '<div onmousedown="{startDrawing}" class="content"> <yield></yield> </div> <div if="{drawing}" name="_svgContainer" class="svg-container"> <svg height="100%" width="100%"> <path name="_connectionLine" stroke="{color}" stroke-width="2" fill="none" d=""></path> <circle name="_circleOrigin" r="4" fill="{color}"></circle> <circle name="_circleTarget" r="4" fill="{color}"></circle> </svg> </div>', '', '', function (opts) {
 	    var _this = this;
 
-	    __webpack_require__(8);
+	    __webpack_require__(9);
 
 	    var endDrawingEvent = 'connectable:endDrawing';
-	    var offset = __webpack_require__(10).offset;
+	    var offset = __webpack_require__(6).offset;
 
 	    window.__connectableEventBus = window.__connectableEventBus || riot.observable({});
 
@@ -728,7 +826,7 @@
 	    };
 
 	    this.startDrawing = event => {
-	        if (/^(TEXTAREA|INPUT)$/.test(event.target.nodeName) && !event.target.getAttribute('disabled')) return;
+	        if (event.target.getAttribute('contenteditable') || /^(TEXTAREA|INPUT)$/.test(event.target.nodeName) && !event.target.getAttribute('disabled')) return true;
 
 	        window.__connectableOrigin = _this;
 
@@ -759,6 +857,8 @@
 
 	            window.__connectableEventBus.trigger(endDrawingEvent, e, discardDrawTimeout);
 	        });
+
+	        return true;
 	    };
 
 	    this.endDrawing = e => {
@@ -807,13 +907,13 @@
 	});
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(9);
+	var content = __webpack_require__(10);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(5)(content, {});
@@ -833,7 +933,7 @@
 	}
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(4)();
@@ -841,39 +941,10 @@
 
 
 	// module
-	exports.push([module.id, "connectable {\n  cursor: crosshair;\n  display: block;\n}\nconnectable .content {\n  position: relative;\n}\nconnectable .svg-container {\n  z-index: 800;\n  width: 100%;\n  height: 100%;\n  position: fixed;\n  top: 0;\n  left: 0;\n}\n", ""]);
+	exports.push([module.id, "connectable {\n  cursor: default;\n  display: block;\n}\nconnectable .content {\n  position: relative;\n}\nconnectable .svg-container {\n  z-index: 800;\n  width: 100%;\n  height: 100%;\n  position: fixed;\n  top: 0;\n  left: 0;\n}\n", ""]);
 
 	// exports
 
-
-/***/ },
-/* 10 */
-/***/ function(module, exports) {
-
-	module.exports = {
-	    offset: function (elem, options) {
-	        var docElem;
-	        var rect;
-	        var doc;
-
-	        if (!elem) {
-	            return;
-	        }
-
-	        rect = elem.getBoundingClientRect();
-
-	        // Make sure element is not hidden (display: none) or disconnected
-	        if (rect.width || rect.height || elem.getClientRects().length) {
-	            doc = elem.ownerDocument;
-	            docElem = doc.documentElement;
-
-	            return {
-	                top: rect.top + window.pageYOffset - docElem.clientTop,
-	                left: rect.left + window.pageXOffset - docElem.clientLeft
-	            };
-	        }
-	    }
-	};
 
 /***/ },
 /* 11 */
@@ -940,12 +1011,12 @@
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
-	riot.tag2('floating-menu', '<div class="target" onclick="{toggle}"> <yield></yield> </div> <ul class="options" each="{open ? [1] : []}"> <li each="{option in getOptions()}" onclick="{action}">{option.name}</li> </ul>', '', '', function (opts) {
+	riot.tag2('floating-menu', '<div class="target" onclick="{toggle}"> <yield></yield> </div> <ul class="options" each="{open ? [1] : []}"> <li each="{option in getOptions()}" onclick="{action}" class="{separator: option.separator}">{option.name}</li> </ul>', '', '', function (opts) {
 	    var _this = this;
 
 	    __webpack_require__(15);
 
-	    var offset = __webpack_require__(10).offset;
+	    var offset = __webpack_require__(6).offset;
 	    var actions = {
 	        CLOSE_OTHERS: "floating-menu:close-others"
 	    };
@@ -1024,7 +1095,7 @@
 
 
 	// module
-	exports.push([module.id, "floating-menu {\n  display: inline-block;\n}\nfloating-menu .target {\n  display: inline;\n  cursor: default;\n}\nfloating-menu .options {\n  background: #fff;\n  box-shadow: 1px 1px 20px rgba(0,0,0,0.4);\n  position: absolute;\n  z-index: 999;\n  width: 200px;\n  padding: 1px;\n  margin: 0;\n}\nfloating-menu .options li {\n  list-style: none;\n  color: #333;\n  padding: 10px 20px;\n  cursor: pointer;\n  text-align: left;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\nfloating-menu .options li:hover {\n  background: #e4e4e4;\n}\n", ""]);
+	exports.push([module.id, "floating-menu {\n  display: inline-block;\n}\nfloating-menu .target {\n  display: inline;\n  cursor: default;\n}\nfloating-menu .options {\n  background: #fff;\n  box-shadow: 1px 1px 20px rgba(0,0,0,0.4);\n  position: absolute;\n  z-index: 999;\n  width: 200px;\n  padding: 1px;\n  margin: 0;\n}\nfloating-menu .options li {\n  list-style: none;\n  color: #333;\n  padding: 10px 20px;\n  cursor: pointer;\n  text-align: left;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\nfloating-menu .options li:hover {\n  background: #e4e4e4;\n}\nfloating-menu .separator {\n  border-top: 1px solid #ccc;\n}\n", ""]);
 
 	// exports
 
@@ -1033,12 +1104,12 @@
 /* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
-	riot.tag2('editable-text', '<div name="_editable" class="editable" onkeydown="{handleInput}" onblur="{saveEditing}" ondblclick="{enableEditing}" onpaste="{handlePaste}" contenteditable="{editing}">{content}</div>', '', '', function (opts) {
+	riot.tag2('editable-text', '<div class="placeholder" if="{!editing && showPlaceholder}">{opts.placeholder || \'&nbsp;\'}</div> <div name="_editable" class="editable" onkeydown="{handleInput}" onblur="{saveEditing}" onpaste="{handlePaste}" contenteditable="{editing}">{content}</div>', '', 'ondblclick="{enableEditing}"', function (opts) {
 	    var _this = this;
 
 	    __webpack_require__(18);
 
-	    var keycode = __webpack_require__(6);
+	    var keycode = __webpack_require__(7);
 
 	    this.editing = false;
 	    this.content = this.opts.content;
@@ -1083,13 +1154,15 @@
 
 	        _this.update({ editing: true });
 	        _this._editable.focus();
-
 	        _this.moveCaretToTheEnd();
 	    };
 
 	    this.saveEditing = options => {
+	        if (!_this.editing) return;
+
 	        _this.content = _this._editable.textContent;
 	        _this._editable.innerHTML = _this.content;
+	        _this.showPlaceholder = !_this.content;
 	        _this.opts.oncontentchange && _this.opts.oncontentchange(_this.content);
 
 	        _this.editing = false;
@@ -1161,7 +1234,7 @@
 
 
 	// module
-	exports.push([module.id, "editable-text .editable {\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\neditable-text .editable[contenteditable=true] {\n  background: rgba(0,0,0,0.2);\n  padding: 0.4em 0.5em;\n  margin: -0.4em -0.5em;\n  outline: none;\n  -webkit-user-select: text;\n  -moz-user-select: text;\n  -ms-user-select: text;\n  user-select: text;\n}\n", ""]);
+	exports.push([module.id, "editable-text {\n  display: block;\n}\neditable-text .editable,\neditable-text .placeholder {\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\neditable-text .editable {\n  background: transparent;\n  padding: 0.4em 0.5em;\n  margin: -0.4em -0.5em;\n}\neditable-text .editable[contenteditable=true] {\n  background: rgba(0,0,0,0.1);\n  padding: 0.4em 0.5em;\n  margin: -0.4em -0.5em;\n  outline: none;\n  -webkit-user-select: text;\n  -moz-user-select: text;\n  -ms-user-select: text;\n  user-select: text;\n}\n", ""]);
 
 	// exports
 

@@ -46,14 +46,14 @@
             this._circleTarget.setAttribute('cx', to.x);
             this._circleTarget.setAttribute('cy', to.y);
         };
-
+        
         this.followScroll = (event) => {
             this._svgContainer.style.marginTop = `${this.from.scrollY - window.scrollY}px`;
         };
 
         this.startDrawing = (event) => {
-            if (/^(TEXTAREA|INPUT)$/.test(event.target.nodeName) && !event.target.getAttribute('disabled'))
-                return;
+            if (event.target.getAttribute('contenteditable') || (/^(TEXTAREA|INPUT)$/.test(event.target.nodeName) && !event.target.getAttribute('disabled')))
+                return true;
 
             window.__connectableOrigin = this;
 
@@ -84,6 +84,8 @@
 
                 window.__connectableEventBus.trigger(endDrawingEvent, e, discardDrawTimeout);
             });
+            
+            return true;
         };
 
         this.endDrawing = (e) => {
