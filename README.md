@@ -1,3 +1,3 @@
 # Riot UI
 
-`npm install --save-dev riot-ui`
+`npm install --save riot-ui`
