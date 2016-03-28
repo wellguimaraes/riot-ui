@@ -7,7 +7,9 @@ module.exports = {
         filename: 'riot-ui.js'
     },
     plugins: [
-        // new webpack.optimize.UglifyJsPlugin({minimize: true})
+        new webpack.optimize.UglifyJsPlugin({
+            minimize: true
+        })
     ],
     module: {
         loaders: [{
@@ -24,8 +26,5 @@ module.exports = {
             loaders: ['babel-loader', 'riotjs-loader']
 
         }]
-    },
-    devServer: {
-        contentBase: './public'
     }
 };
