@@ -25,7 +25,7 @@
 
         this.action = (e) => {
             this.hideMenu();
-            e.item.option.action && e.item.option.action();
+            e.item.option.action && e.item.option.action.apply(null, [e, ...(this.opts.extra || [])]);
         };
 
         this.hideMenu = () => {
